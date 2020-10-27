@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
         chrome.tabs.query({currentWindow: true, active: true},
             function (tabs) {
                 chrome.tabs.sendMessage(null,'hi');
+                alert('hellooooo');
             });
     }
 }, false)
