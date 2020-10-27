@@ -17,12 +17,12 @@ func insertNewsPiece(new NewsPiece, associatedUser User) error {
 	return nil
 }
 
-// fetch User into mongo
+// fetch User from mongo
 func fetchUser(findUser User) (error, User) {
 	return nil
 }
 
-// fetch NewsPiece associated with User from  mongo
+// fetch NewsPiece associated with User from mongo
 func fetchNewsPiece(findNews NewsPiece, associatedUser User) (error, User, NewsPiece) {
 	return nil
 }

@@ -17,9 +17,10 @@ type User struct {
 	ID string
 }
 
+// NewsPiece represents a News Article
 type NewsPiece struct {
-	ID 		string
-	Title 	string
-	Author 	string
-	Source	string
+	ID     string
+	Title  string
+	Author string
+	Source string
 }
