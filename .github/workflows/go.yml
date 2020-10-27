@@ -53,6 +53,7 @@ jobs:
 
   # Unit Tests for Ubuntu
     test-ubuntu:
+      name: Unit Tests for Ubuntu
       runs-on: ubuntu-latest
       needs: [ build, lint ]
       steps:
@@ -66,6 +67,7 @@ jobs:
         
   # Unit Tests for Windows
     test-windows:
+      name: Unit Tests for Windows
       runs-on: windows-latest
       needs: [ build, lint ]
       steps:
@@ -83,6 +85,7 @@ jobs:
 
   # Unit Tests for MacOS
     test-macos:
+      name: Unit Tests for MacOS
       runs-on: macos-latest
       needs: [ build, lint ]
       steps:
@@ -94,5 +97,9 @@ jobs:
   # Test Integration
 
   # Release
-    needs: [ build, lint, test-ubuntu, test-windows, test-macos ]
-       
+    release:
+      name: Publish release
+      needs: [ build, lint, test-ubuntu, test-windows, test-macos ]
+      runs-on: ubuntu-latest
+      steps:
+    
