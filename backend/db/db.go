@@ -21,13 +21,28 @@ func init() {
 
 // create new ...
 func createNewUser(id string) (string, error) {
-	// userError = insert()
-	return "User created!", nil
+	userError := insertUser(User{
+		ID: id,
+	})
+
+	if userError != nil {
+		log.Fatal(userError.Error())
+	}
+	return "User created!", userError
 }
 
-func createNewNewsPiece(id string, author string, title string, source string) (string, error) {
-	// newsErr = insert()
-	return "NewsPiece create!", nil
+func createNewNewsPiece(id string, author string, title string, source string, user User) (string, error) {
+	newsError := insertNewsPiece(NewsPiece{
+		ID:     id,
+		Title:  title,
+		Author: author,
+		Source: source,
+	}, user)
+
+	if newsError != nil {
+		log.Fatal(newsError.Error())
+	}
+	return "NewsPiece created!", newsError
 
 }
 
