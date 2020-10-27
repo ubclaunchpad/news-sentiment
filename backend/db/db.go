@@ -20,8 +20,15 @@ func init() {
 }
 
 // create new ...
-func createNewUser() (string, error) {
-	return "test", nil
+func createNewUser(id string) (string, error) {
+	err = insert()
+	return "User created!", err
+}
+
+func createNewNewsPiece(id string, author string, title string, source string) (string, error) {
+	err = insert()
+	return "NewsPiece create!", err
+
 }
 
 // need more specifications on what the user will be doing

@@ -1,16 +1,16 @@
 package db
 
 // make connection with mongo
-func initSession() {
-
+func initSession() error {
+	return nil
 }
 
 // insert data into mongo
-func insert() {
-
+func insert() error {
+	return nil
 }
 
 // fetch data from mongo
-func fetch() {
-
+func fetch() error {
+	return nil
 }
