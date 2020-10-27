@@ -1,0 +1,32 @@
+{
+  "manifest_version": 2,
+  "name": "News Sentiment",
+  "version": "0.1",
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": ["frontend/content.js"]
+    }
+  ],
+  "icons": {
+    "16": "frontend/icon.png",
+    "32": "frontend/icon.png",
+    "48": "frontend/icon.png",
+    "128": "frontend/icon.png"
+  },
+  "browser_action": {
+    "default_icon": "frontend/icon.png",
+    "default_popup": "frontend/popup/popup.html",
+    "default_title": "The title"
+  },
+  "background": {
+    "scripts": ["frontend/background.js"]
+  },
+  "options_page": "frontend/options.html",
+  "permissions": [
+      "tabs",
+      "<all_urls>"
+  ]
+}
