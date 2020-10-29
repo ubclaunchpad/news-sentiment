@@ -1,4 +1,5 @@
 package main
+
 import (
 	"fmt"
 	"net/http"
@@ -19,9 +20,9 @@ func headers(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-
 	http.HandleFunc("/hello", hello)
 	http.HandleFunc("/headers", headers)
 
+	fmt.Println("Running server on port 8090")
 	http.ListenAndServe(":8090", nil)
 }
