@@ -16,7 +16,7 @@ $ go version
 # Run the server
 First cd to the main directory:
 ```sh
-$ cd news-sentiment/go-server/main
+$ cd news-sentiment/backend
 ```
 
 Run the server:
