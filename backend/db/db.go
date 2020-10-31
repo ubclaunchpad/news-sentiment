@@ -2,18 +2,10 @@ package db
 
 import (
 	"log"
-
-	"github.com/joho/godotenv"
 )
 
 // init mongo
 func Init() {
-	// load .env file
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Error loading .env file: %v", err)
-	}
-
 	// get credentials
 	// example: mIP := os.Getenv("MONGO_IP")
 	initSession()
