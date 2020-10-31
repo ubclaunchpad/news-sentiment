@@ -7,11 +7,11 @@ import (
 )
 
 // init mongo
-func init() {
+func Init() {
 	// load .env file
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file: %s", err.Error())
+		log.Fatalf("Error loading .env file: %v", err)
 	}
 
 	// get credentials
@@ -20,29 +20,29 @@ func init() {
 }
 
 // create new ...
-func createNewUser(id string) (string, error) {
-	userError := insertUser(User{
-		ID: id,
-	})
-
-	if userError != nil {
+func createNewUser(id string, email string, name string) (string, error) {
+	if userError := insertUser(User{
+		ID:    id,
+		Name:  name,
+		Email: email,
+	}); userError != nil {
 		log.Fatal(userError.Error())
 	}
-	return "User created!", userError
+
+	return "User created!", nil
 }
 
-func createNewNewsPiece(id string, author string, title string, source string, user User) (string, error) {
-	newsError := insertNewsPiece(NewsPiece{
+func createNewNewsPiece(id string, url string, title string, source string) (string, error) {
+	if newsError := insertArticle(Article{
 		ID:     id,
 		Title:  title,
-		Author: author,
+		URL:    url,
 		Source: source,
-	}, user)
-
-	if newsError != nil {
+	}); newsError != nil {
 		log.Fatal(newsError.Error())
 	}
-	return "NewsPiece created!", newsError
+
+	return "NewsPiece created!", nil
 
 }
 

@@ -1,3 +1,2 @@
-backend/db/.env
 .idea*
-
+**/.env

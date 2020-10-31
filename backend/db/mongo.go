@@ -13,16 +13,26 @@ func insertUser(new User) error {
 }
 
 // insert NewsPiece associated with User into mongo
-func insertNewsPiece(new NewsPiece, associatedUser User) error {
+func insertArticle(article Article) error {
 	return nil
 }
 
 // fetch User from mongo
-func fetchUser(findUser User) (error, User) {
-	return nil
+func fetchUser(findUser User) (User, error) {
+	return User{}, nil
 }
 
 // fetch NewsPiece associated with User from mongo
-func fetchNewsPiece(findNews NewsPiece, associatedUser User) (error, User, NewsPiece) {
+func fetchArticle(findNews Article) (Article, error) {
+	return Article{}, nil
+}
+
+// Insert a Vote
+func insertVote(vote Vote) error {
 	return nil
+}
+
+// Get votes for article
+func fetchVotes(article Article) ([]Vote, error) {
+	return nil, nil
 }
