@@ -24,9 +24,8 @@ func createNewUser(id string, email string, name string) (string, error) {
 	return "User created!", nil
 }
 
-func createNewNewsPiece(id string, url string, title string, source string) (string, error) {
+func createNewArticle(url string, title string, source string) (string, error) {
 	if newsError := insertArticle(Article{
-		ID:     id,
 		Title:  title,
 		URL:    url,
 		Source: source,
@@ -34,7 +33,7 @@ func createNewNewsPiece(id string, url string, title string, source string) (str
 		log.Fatal(newsError.Error())
 	}
 
-	return "NewsPiece created!", nil
+	return "Article created!", nil
 
 }
 

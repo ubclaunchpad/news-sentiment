@@ -23,7 +23,6 @@ type User struct {
 
 // NewsPiece represents a News Article
 type Article struct {
-	ID     string
 	Source string
 	Title  string
 	URL    string
@@ -32,7 +31,6 @@ type Article struct {
 
 // Vote represents a vote
 type Vote struct {
-	ID        string
 	UserId    string
 	ArticleId string
 	VoteValue int32
