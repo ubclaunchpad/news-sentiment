@@ -14,13 +14,26 @@ package db
 
 // User represents the data that a user would have
 type User struct {
-	ID string
+	ID         string
+	Name       string
+	Email      string
+	Preference string
+	Votes      []Vote
 }
 
 // NewsPiece represents a News Article
-type NewsPiece struct {
+type Article struct {
 	ID     string
-	Title  string
-	Author string
 	Source string
+	Title  string
+	URL    string
+	Votes  []Vote
+}
+
+// Vote represents a vote
+type Vote struct {
+	ID        string
+	UserId    string
+	ArticleId string
+	VoteValue int32
 }
