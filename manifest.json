@@ -5,9 +5,10 @@
   "content_scripts": [
     {
       "matches": [
-        "<all_urls>"
+        "https://www.bbc.com/news/*"
       ],
-      "js": ["frontend/content.js"]
+      "js": ["frontend/content.js"],
+      "css": ["frontend/content.css"]
     }
   ],
   "icons": {
@@ -22,11 +23,15 @@
     "default_title": "The title"
   },
   "background": {
-    "scripts": ["frontend/background.js"]
+    "scripts": ["frontend/background.js"],
+    "persistent": false
   },
   "options_page": "frontend/options.html",
   "permissions": [
-      "tabs",
-      "<all_urls>"
+    "tabs",
+    "https://www.google.com/*",
+    "https://www.youtube.com/*",
+    "https://www.stackoverflow.com/*",
+    "*://*/*"
   ]
 }
