@@ -1,19 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
+
     document.getElementById('contentClick').addEventListener('click', contentOnClick, false);
     document.getElementById('backgroundClick').addEventListener('click', bkgOnClick, false);
 
     function contentOnClick() {
         chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, {request: 'toContent'}, null, showHeading);
+            chrome.tabs.sendMessage(tabs[0].id, {request: 'toContent'}, null, fromContent);
         });
     }
     function bkgOnClick() {
-        chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, {request: 'toBkg'}, null, showUrl);
+        chrome.tabs.query({currentWindow: true, active: true}, () => {
+            chrome.runtime.sendMessage({request: 'toBkg'}, fromBkg);
         });
     }
 
-    function showHeading(res) {
+    function fromContent(res) {
         if (res) {
             const headingDiv = document.createElement('div');
             headingDiv.textContent = res.firstHeadingValue;
@@ -23,15 +24,18 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.appendChild(headingDiv);
             document.body.appendChild(br);
             document.body.appendChild(urlDiv);
+            document.body.appendChild(br);
         }
     }
 
-    function showUrl(res) {
-        console.log("showUrl response: ", res);
-        const div = document.createElement('div');
-        div.textContent = res.firstHeadingValue;
-        console.log("res.currentUrl in popup.js: ");
-        document.body.appendChild(div);
+    function fromBkg(res) {
+        if (res) {
+            const div = document.createElement('div');
+            div.textContent = res.currentUrl;
+            const br = document.createElement('br');
+            document.body.appendChild(div);
+            document.body.appendChild(br);
+        }
     }
 
 }, false);
