@@ -5,4 +5,5 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         const url = window.location.href;
         sendResponse({firstHeadingValue: firstHeadingValue, url: url});
     }
+    return true;
 });

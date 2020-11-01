@@ -21,15 +21,15 @@ chrome.tabs.onActivated.addListener(tab => {
             }
         }
     });
+});
 
-    chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-        if (message.request === 'toBkg') {
-            chrome.tabs.get(tab.tabId, activeTabObject => {
-                sendResponse({currentUrl: activeTabObject?.url});
-            });
-        }
-        return true;
-    });
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+    if (message.request === 'toBkg') {
+        chrome.tabs.query({ active: true, currentWindow: true}, function(tabs) {
+            sendResponse({currentUrl: tabs[0]?.url});
+        });
+    }
+    return true;
 });
 
 function testActiveUrlAgainstListOfInjectableURLRegex(activeTabUrl) {

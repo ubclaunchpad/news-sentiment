@@ -15,21 +15,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function fromContent(res) {
-        if (res) {
+        if (res?.firstHeadingValue) {
             const headingDiv = document.createElement('div');
             headingDiv.textContent = res.firstHeadingValue;
             const br = document.createElement('br');
-            const urlDiv = document.createElement('div');
-            urlDiv.textContent = res.url;
             document.body.appendChild(headingDiv);
             document.body.appendChild(br);
+        }
+        if (res?.url) {
+            const urlDiv = document.createElement('div');
+            urlDiv.textContent = res.url;
+            const br = document.createElement('br');
             document.body.appendChild(urlDiv);
             document.body.appendChild(br);
         }
     }
 
     function fromBkg(res) {
-        if (res) {
+        if (res?.currentUrl) {
             const div = document.createElement('div');
             div.textContent = res.currentUrl;
             const br = document.createElement('br');
