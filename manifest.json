@@ -5,7 +5,7 @@
   "content_scripts": [
     {
       "matches": [
-        "https://www.bbc.com/news/*"
+        "<all_urls>"
       ],
       "js": ["frontend/content.js"],
       "css": ["frontend/content.css"]
@@ -29,9 +29,8 @@
   "options_page": "frontend/options.html",
   "permissions": [
     "tabs",
-    "https://www.google.com/*",
-    "https://www.youtube.com/*",
-    "https://www.stackoverflow.com/*",
-    "*://*/*"
+    "https://*/*",
+    "http://*/*",
+    "<all_urls>"
   ]
 }

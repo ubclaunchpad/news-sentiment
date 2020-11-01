@@ -13,12 +13,22 @@ chrome.tabs.onActivated.addListener(tab => {
         console.log(activeTabObject.url); // will print out active tab info in the background console
         if (testActiveUrlAgainstListOfInjectableURLRegex(activeTabObject.url)) { // inject script if on google.com (for testing, change this)
             try {
-                chrome.tabs.executeScript(null, {file: './foreground.js'},() => {
+                chrome.tabs.executeScript(null, {file: 'frontend/foreground.js'},() => {
                     console.log('injected foreground');
                 });
             } catch (e) {
                 console.log('Error when executing foreground.js from background', e);
             }
+        }
+    });
+
+    chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+        console.log("geturl!!!!")
+        if (message.request === 'toBkg') {
+            chrome.tabs.get(tab.tabId, activeTabObject => {
+                console.log("getUrl listener activeTabObject.url", activeTabObject.url); // will print out active tab info in the background console
+                sendResponse({currentUrl: activeTabObject.url});
+            });
         }
     });
 });

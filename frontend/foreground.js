@@ -1,1 +1,1 @@
-console.log("run foreground");
+console.log("run foreground.js script");
