@@ -38,9 +38,17 @@ This message shows that your installation appears to be working correctly."
 ```
 docker run hello-world
 ```
+Go to the backend folder
+```
+cd backend
+```
 Run this command to pull the latest image of mongo
 ```
 docker pull mongo:latest
+```
+After changes to docker-compose.yml/ starting up docker run:
+```
+docker-compose up 
 ```
 Run this command to see container running
 ```
@@ -49,10 +57,6 @@ docker exec -it mongo-container bash
 Login into mongoDB
 ```
 mongo -u root -p rootpassword 
-```
-After changes to docker-compose.yml run
-```
-docker-compose up
 ```
 Login as admin user
 ```
