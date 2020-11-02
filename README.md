@@ -24,7 +24,7 @@ This project is currently a work-in-progress and we don't have a clear usage yet
 
 Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/ubclaunchpad/news-sentiment/issues). 
 
-Checkout our [contributing guide](./CONTRIBUTING.md) for more detailss
+Checkout our [contributing guide](./CONTRIBUTING.md) for more details.
 
 ## Show your support
 
