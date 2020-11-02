@@ -7,11 +7,30 @@ import (
 
 	"github.com/joho/godotenv"
 	db "github.com/ubclaunchpad/news-sentiment/db"
+	"github.com/jdkato/prose/v2"  //NLP Library
 )
 
 func hello(w http.ResponseWriter, req *http.Request) {
 
-	fmt.Fprintf(w, "Hello world!\n")
+	fmt.Fprintf(w, "Hello wdsdsorld!\n")
+
+	// Create a new document with the default configuration:
+    doc, err := prose.NewDocument("Go is an open-source programming language created at Google.")
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Iterate over the doc's tokens:
+    for _, tok := range doc.Tokens() {
+        fmt.Println(tok.Text, tok.Tag, tok.Label)
+        // Go NNP B-GPE
+        // is VBZ O
+        // an DT O
+        // ...
+    }
+
+
+
 }
 
 func headers(w http.ResponseWriter, req *http.Request) {
@@ -24,7 +43,7 @@ func headers(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load("example.env"); err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
 	db.Init()
