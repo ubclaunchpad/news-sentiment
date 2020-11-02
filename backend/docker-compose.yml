@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  database: # service name, change to whatever you want 
+    image: mongo:latest # must be mongo 
+    container_name: 'mongo-container' # give container a name, can be optional 
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root # container root username 
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword # container root password 
+    ports:
+      - 27017:27017
+    volumes: 
+      - ./mongo-volume:/data/db # define file/folder that you want to use for container 
+
+# volumes: 
+#       - mongo-volume:/data/db 
+
+# volumes:  
+#   mongo-volume:
+
