@@ -33,6 +33,7 @@ Hello world!
 Done!
 
 # To get Docker running 🐳
+### Make sure to change the example.env to .env after you have docker running. 
 Install [Docker Desktop](https://docs.docker.com/get-docker/). Docker compose is already included in the Docker Desktop installation. Check that docker is working by running the command below. You should get a message saying: "Hello from Docker!
 This message shows that your installation appears to be working correctly."
 ```
