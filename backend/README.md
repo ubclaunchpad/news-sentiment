@@ -62,6 +62,11 @@ Login as admin user
 ```
 docker-compose exec mongoDb mongo -u admin -p admin --authenticationDatabase "admin"
 ```
+Check ports and volume:
+```
+docker ps
+docker volume ls
+```
 Make new db
 ```
 use <new-database-name>
