@@ -11,7 +11,7 @@ chrome.tabs.onActivated.addListener(tab => {
     console.log(tab); // will print out tabId and windowId as tab object in the background console
     chrome.tabs.get(tab.tabId, activeTabObject => {
         console.log(activeTabObject.url); // will print out active tab info in the background console
-        if (testActiveUrlAgainstListOfInjectableURLRegex(activeTabObject.url)) { // inject script if on google.com (for testing, change this)
+        if (testActiveUrlAgainstListOfInjectableURLRegex(activeTabObject.url)) {
             try {
                 chrome.tabs.executeScript(null, {file: 'frontend/foreground.js'}, // can also do executeCSS
                     () => console.log('background: injected foreground.js')
