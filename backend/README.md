@@ -51,17 +51,27 @@ After changes to docker-compose.yml/ starting up docker run:
 ```
 docker-compose up 
 ```
-Run this command to see container running
+Run this command to see container running/enter bash
 ```
 docker exec -it mongo-container bash
 ```
 Login into mongoDB
 ```
-mongo -u root -p rootpassword 
+mongo -u <username from .env> -p <password from .env> 
+```
+Make new admin user
+```
+db.createUser(  
+  {
+    user: <username>,
+    pwd: <pwd>,
+    roles: [ { role: "root", db: "admin" } ]
+  }
+)
 ```
 Login as admin user
 ```
-docker-compose exec mongoDb mongo -u admin -p admin --authenticationDatabase "admin"
+docker-compose exec mongoDb mongo -u <username> -p <password> --authenticationDatabase <db you made when making an admin acc>
 ```
 Check ports and volume:
 ```
@@ -72,6 +82,15 @@ Make new db
 ```
 use <new-database-name>
 ```
-Monitering link: https://cloud.mongodb.com/freemonitoring/cluster/AAELUOCX3UZ6CRTLTDAGF62V7ND2KWBD
-Useful link: https://start.jcolemorrison.com/docker-fresh-mysql-or-mongodb-instances-in-projects/
+Check all your db
+```
+db
+```
+Add things to db
+```
+db.<db name>.insert({})
+```
+- Monitering link: https://cloud.mongodb.com/freemonitoring/cluster/AAELUOCX3UZ6CRTLTDAGF62V7ND2KWBD
+
+- Useful link: https://start.jcolemorrison.com/docker-fresh-mysql-or-mongodb-instances-in-projects/
 

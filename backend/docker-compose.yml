@@ -1,13 +1,10 @@
-version: '3.8'
+version: '3'
 services:
   database: # service name, change to whatever you want 
     image: mongo:latest # must be mongo 
     container_name: 'mongo-container' # give container a name, can be optional 
     env_file:
-      - ./.env
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME} # container root username 
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD} # container root password 
+      - ./.env 
     ports:
       - 27017:27017
     volumes: 
