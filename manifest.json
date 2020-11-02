@@ -7,7 +7,8 @@
       "matches": [
         "<all_urls>"
       ],
-      "js": ["frontend/content.js"]
+      "js": ["frontend/content.js"],
+      "css": ["frontend/content.css"]
     }
   ],
   "icons": {
@@ -22,11 +23,14 @@
     "default_title": "The title"
   },
   "background": {
-    "scripts": ["frontend/background.js"]
+    "scripts": ["frontend/background.js"],
+    "persistent": false
   },
   "options_page": "frontend/options.html",
   "permissions": [
-      "tabs",
-      "<all_urls>"
+    "tabs",
+    "https://*/*",
+    "http://*/*",
+    "<all_urls>"
   ]
 }
