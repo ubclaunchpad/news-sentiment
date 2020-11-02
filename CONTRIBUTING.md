@@ -23,12 +23,12 @@ We use a `MongoDB` database for persistence, accessed from go.
 
 ### Frontend 😄
 
-The Frontend is a chrome extension... Ya that's it at the time!
+The frontend is a chrome extension... Ya that's it at the time!
 
 
 ## How can I setup my environment? 🖥️
 ### Backend
-To setup the backend you need `go` installed, you can find instructions on [go's download website](https://golang.org/dl/). Beyond that, you would need a `MongoDB` database, you can that working using a local `MongoDB` environment, easiest way is through [`docker-compose`](https://docs.docker.com/compose/) by running the following in the `backend` directory:
+To setup the backend you need `go` installed, you can find instructions on [go's download website](https://golang.org/dl/). Beyond that, you would need a `MongoDB` database, you can get that working using a local `MongoDB` environment, easiest way is through [`docker-compose`](https://docs.docker.com/compose/) by running the following in the `backend` directory:
 ```bash
 docker-compose up
 ```
