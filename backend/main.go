@@ -33,9 +33,7 @@ func getUser(w http.ResponseWriter, req *http.Request){
 
 //POST: endpoint to add a single user
 func addUser(w http.ResponseWriter, req *http.Request){
-
-	// get the body of our POST request
-    // return the string response containing the request body    
+	
     reqBody, _ := ioutil.ReadAll(req.Body)
     fmt.Fprintf(w, "%+v", string(reqBody))
 
@@ -55,8 +53,6 @@ func getArticle(w http.ResponseWriter, req *http.Request){
 //POST: endpoint to add a single article
 func addArticle(w http.ResponseWriter, req *http.Request){
 
-	// get the body of our POST request
-    // return the string response containing the request body    
     reqBody, _ := ioutil.ReadAll(req.Body)
     fmt.Fprintf(w, "%+v", string(reqBody))
 
