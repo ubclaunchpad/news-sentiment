@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"io/ioutil"
 	"github.com/joho/godotenv"
 	db "github.com/ubclaunchpad/news-sentiment/db"
 	"github.com/gorilla/mux"
@@ -12,7 +13,7 @@ import (
 
 
 func homePage(w http.ResponseWriter, r *http.Request){
-    fmt.Fprintf(w, "Welcome to the HomePage!")
+    fmt.Fprintf(w, "HOME: News Analysis App")
     fmt.Println("Endpoint Hit: homePage")
 }
 
@@ -30,6 +31,17 @@ func getUser(w http.ResponseWriter, req *http.Request){
 }
 
 
+//POST: endpoint to add a single user
+func addUser(w http.ResponseWriter, req *http.Request){
+
+	// get the body of our POST request
+    // return the string response containing the request body    
+    reqBody, _ := ioutil.ReadAll(req.Body)
+    fmt.Fprintf(w, "%+v", string(reqBody))
+
+}
+
+
 //GET: endpoint for a single article
 func getArticle(w http.ResponseWriter, req *http.Request){
 
@@ -40,15 +52,30 @@ func getArticle(w http.ResponseWriter, req *http.Request){
 }
 
 
+//POST: endpoint to add a single article
+func addArticle(w http.ResponseWriter, req *http.Request){
+
+	// get the body of our POST request
+    // return the string response containing the request body    
+    reqBody, _ := ioutil.ReadAll(req.Body)
+    fmt.Fprintf(w, "%+v", string(reqBody))
+
+}
 
 
+
+
+//Driver for all routes
 func handleRequests(){
 
-	// creates a new instance of a mux router
 	router := mux.NewRouter().StrictSlash(true)
 	
 	router.HandleFunc("/", homePage)
+
+	router.HandleFunc("/users/", addUser).Methods("POST")
 	router.HandleFunc("/users/{id}", getUser)
+
+	router.HandleFunc("/articles/", addArticle).Methods("POST")
 	router.HandleFunc("/articles/{id}", getArticle)
 
     log.Fatal(http.ListenAndServe(":8090", router))
