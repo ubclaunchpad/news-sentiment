@@ -11,6 +11,11 @@ func Init() {
 	initSession()
 }
 
+//This is the interface...
+// getUser... () => return the User
+// Struct of DB type or... sth else for main
+
+
 // create new ...
 func createNewUser(id string, email string, name string) (string, error) {
 	if userError := insertUser(User{
