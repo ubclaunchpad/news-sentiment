@@ -10,5 +10,7 @@ require (
 	github.com/jdkato/prose/v2 v2.0.0
 	github.com/joho/godotenv v1.3.0
 	github.com/mattn/go-shellwords v1.0.10 // indirect
+	github.com/pkg/errors v0.9.1
+	go.mongodb.org/mongo-driver v1.4.3
 	gopkg.in/urfave/cli.v1 v1.20.0 // indirect
 )
