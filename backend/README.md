@@ -21,7 +21,7 @@ $ cd news-sentiment/backend
 
 Run the server:
 ```sh
-$ go run main.go
+$ make run
 ```
 
 Check the server is running by pinging it:
