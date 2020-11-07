@@ -1,5 +1,12 @@
 package db
 
+import (
+	"context"
+
+	"github.com/pkg/errors"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
+
 // global variable to mongo connection
 
 // make connection with mongo
@@ -8,8 +15,17 @@ func initSession() error {
 }
 
 // insert User into mongo
-func insertUser(new User) error {
-	return nil
+func (c *Database) insertUser(user User) (string, error) {
+	collection := c.database.Collection("users") // TODO: Un-hardcode this
+	insertResult, err := collection.InsertOne(context.TODO(), user)
+	if err != nil {
+		return "", errors.Wrap(err, "Error inserting into mongo database")
+	}
+	if oid, ok := insertResult.InsertedID.(primitive.ObjectID); ok {
+		return oid.Hex(), nil
+	} else {
+		return "", errors.New("Invalid id created")
+	}
 }
 
 // insert NewsPiece associated with User into mongo
