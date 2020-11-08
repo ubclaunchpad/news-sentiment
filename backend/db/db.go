@@ -47,15 +47,14 @@ func (c *Database) CreateNewUser(email string, name string) (string, error) {
 	return id, nil
 }
 
-func createNewArticle(url string, title string, source string) (string, error) {
-	if newsError := insertArticle(Article{
+func (c *Database) CreateNewArticle(url string, title string, source string) (string, error) {
+	result, newsError := c.insertArticle(Article{
 		Title:  title,
 		URL:    url,
 		Source: source,
-	}); newsError != nil {
-		log.Fatal(newsError.Error())
+	})
+	if newsError != nil {
+		return "", errors.Wrap(newsError, "Unable to add article")
 	}
-
-	return "Article created!", nil
-
+	return result, nil
 }

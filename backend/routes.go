@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os"
 
@@ -86,8 +85,26 @@ func (s *server) handleGetArticle() http.HandlerFunc {
 //POST: endpoint to add a single article
 func (s *server) handleAddArticle() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		reqBody, _ := ioutil.ReadAll(req.Body)
-		fmt.Fprintf(w, "%+v", string(reqBody))
+		type ArticleJSON struct {
+			Source string `json:"source"`
+			Title  string `json:"title"`
+			URL    string `json:"url"`
+		}
+		var article ArticleJSON
+		if err := json.NewDecoder(req.Body).Decode(&article); err != nil {
+			s.respond(w, req, makeErrorResponse(err), 400)
+			return
+		}
+		result, err := s.db.CreateNewArticle(article.URL, article.Title, article.Source)
+		if err != nil {
+			s.respond(w, req, makeErrorResponse(err), 500)
+			return
+		}
+		// TODO: what should the response return?
+		type ArticleAddedResponse struct {
+			Result string `json:"result"`
+		}
+		s.respond(w, req, ArticleAddedResponse{Result: result}, 200)
 	}
 }
 
