@@ -8,6 +8,15 @@ on:
 
 jobs:
 
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-go@v1
+      with: { go-version: '1.13' }
+    - name: Run linters
+      run: make lint
+
   build:
     name: Build
     runs-on: ubuntu-latest
