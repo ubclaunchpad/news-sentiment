@@ -3,7 +3,8 @@ package main
 import "testing"
 
 func TestFunc(t *testing.T) {
-	if 6 != 6 {
+	var x int = 4
+	if x == 6 {
 		t.Errorf("error")
 	}
 }
