@@ -95,7 +95,7 @@ func (s *server) respond(w http.ResponseWriter, r *http.Request, data interface{
 	w.WriteHeader(status)
 	if data != nil {
 		if err := json.NewEncoder(w).Encode(data); err != nil {
-			json.NewEncoder(w).Encode(ErrorJson{Err: "Unable to encode response"})
+			_ = json.NewEncoder(w).Encode(ErrorJson{Err: "Unable to encode response"})
 		}
 	}
 }
