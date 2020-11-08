@@ -9,12 +9,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type ErrorJson struct {
+type errorJSON struct {
 	Err string `json:"error"`
 }
 
-func makeErrorResponse(err error) *ErrorJson {
-	return &ErrorJson{Err: err.Error()}
+func makeErrorResponse(err error) *errorJSON {
+	return &errorJSON{Err: err.Error()}
 }
 
 func (s *server) handleRoutes() error {
@@ -50,13 +50,13 @@ func (s *server) handleGetUser() http.HandlerFunc {
 //POST: endpoint to add a single user
 func (s *server) handleAddUser() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		type UserJson struct {
+		type userJSON struct {
 			Name       string `json:"name"`
 			Email      string `json:"email"`
 			Preference string `json:"preference"`
 		}
 
-		var user UserJson
+		var user userJSON
 		if err := json.NewDecoder(req.Body).Decode(&user); err != nil {
 			s.respond(w, req, makeErrorResponse(err), 400)
 			return
@@ -112,7 +112,7 @@ func (s *server) respond(w http.ResponseWriter, r *http.Request, data interface{
 	w.WriteHeader(status)
 	if data != nil {
 		if err := json.NewEncoder(w).Encode(data); err != nil {
-			_ = json.NewEncoder(w).Encode(ErrorJson{Err: "Unable to encode response"})
+			_ = json.NewEncoder(w).Encode(errorJSON{Err: "Unable to encode response"})
 		}
 	}
 }
