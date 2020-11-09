@@ -1,5 +1,9 @@
 package db
 
+import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
+
 // User represents the data that a user would have
 type User struct {
 	ID         string
@@ -9,17 +13,17 @@ type User struct {
 	Votes      []Vote
 }
 
-// NewsPiece represents a News Article
+// Article represents a News Article
 type Article struct {
-	Source string
-	Title  string
-	URL    string
-	Votes  []Vote
+	ID    primitive.ObjectID
+	Title string
+	URL   string
+	Votes []Vote
 }
 
 // Vote represents a vote
 type Vote struct {
-	UserId    string
-	ArticleId string
+	UserID    string
+	ArticleID string
 	VoteValue int32
 }

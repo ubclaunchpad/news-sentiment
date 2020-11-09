@@ -7,13 +7,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// global variable to mongo connection
-
-// make connection with mongo
-func initSession() error {
-	return nil
-}
-
 // insert User into mongo
 func (c *Database) insertUser(user User) (string, error) {
 	collection := c.database.Collection("users") // TODO: Un-hardcode this
@@ -23,32 +16,34 @@ func (c *Database) insertUser(user User) (string, error) {
 	}
 	if oid, ok := insertResult.InsertedID.(primitive.ObjectID); ok {
 		return oid.Hex(), nil
-	} else {
-		return "", errors.New("Invalid id created")
 	}
+	return "", errors.New("Invalid id created")
 }
 
-// insert NewsPiece associated with User into mongo
-func insertArticle(article Article) error {
-	return nil
-}
+// insert NewsPiece into mongo
+// func (c *Database) insertArticle(article Article) error {
+// collection := c.database.Collection("articles")
+// to set the id ourselves we need to
+// insertResult, err := collection.InsertOne(context.TODO(), &Article{})
+// 	return errors.New("Invalid id created")
+// }
 
 // fetch User from mongo
-func fetchUser(findUser User) (User, error) {
-	return User{}, nil
-}
+// func fetchUser(findUser User) (User, error) {
+// 	return User{}, nil
+// }
 
-// fetch NewsPiece associated with User from mongo
-func fetchArticle(findNews Article) (Article, error) {
-	return Article{}, nil
-}
+// fetch NewsPiece from mongo
+// func fetchArticle(findNews Article) (Article, error) {
+// 	return Article{}, nil
+// }
 
 // Insert a Vote
-func insertVote(vote Vote) error {
-	return nil
-}
+// func insertVote(vote Vote) error {
+// 	return nil
+// }
 
 // Get votes for article
-func fetchVotes(article Article) ([]Vote, error) {
-	return nil, nil
-}
+// func fetchVotes(article Article) ([]Vote, error) {
+// 	return nil, nil
+// }
