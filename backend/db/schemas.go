@@ -1,9 +1,5 @@
 package db
 
-import (
-	"go.mongodb.org/mongo-driver/bson/primitive"
-)
-
 // User represents the data that a user would have
 type User struct {
 	ID         string
