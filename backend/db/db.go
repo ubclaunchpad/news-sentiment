@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 
-	// "go.mongodb.org/mongo-driver/bson"
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -48,6 +47,7 @@ func (c *Database) CreateNewUser(email string, name string) (string, error) {
 }
 
 func (c *Database) CreateNewArticle(url string, title string, source string) (string, error) {
+	// need to add votes
 	result, newsError := c.insertArticle(Article{
 		Title:  title,
 		URL:    url,

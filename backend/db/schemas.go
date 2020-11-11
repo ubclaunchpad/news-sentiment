@@ -13,13 +13,13 @@ type User struct {
 type Article struct {
 	Source string
 	Title  string
-	URL    string
+	URL    string // is url
 	Votes  []Vote
 }
 
 // Vote represents a vote
 type Vote struct {
 	UserId    string
-	ArticleId string
+	ArticleId string // url of article
 	VoteValue int32
 }

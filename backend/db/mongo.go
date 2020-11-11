@@ -37,7 +37,7 @@ func (c *Database) insertArticle(article Article) (string, error) {
 	}
 	url, ok := insertResult.InsertedID.(primitive.ObjectID)
 	if ok {
-		return "success", nil
+		return url.Hex(), nil
 	}
 	return "failed", errors.New("Invalid id created: " + url.Hex())
 }
