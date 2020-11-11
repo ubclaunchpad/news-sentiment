@@ -5,8 +5,10 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         const url = window.location.href;
         sendResponse({firstHeadingValue: firstHeadingValue, url: url});
     } else if (message.request === 'getDummy') {
-        // do a fetch call of some sort based on the current article here
-        // maybe something like fetch('http:///articles/{id}').then(response => return the response.json() array)
+        // do a fetch call based on the current article here
+        // maybe something like fetch('http:///articles/{id}').then(response => sendResponse({listArticles: the-response.json()-array}));
+        // where id is the id or url for the current article
+
         // send dummy list for now:
         const listArticles = [
             {
