@@ -9,7 +9,7 @@ type User struct {
 	Votes      []Vote
 }
 
-// NewsPiece represents a News Article
+// Article represents a News Article
 type Article struct {
 	Source string
 	Title  string

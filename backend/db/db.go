@@ -54,7 +54,7 @@ func (c *Database) CreateNewArticle(url string, title string, source string) (st
 		Source: source,
 	})
 	if newsError != nil {
-		return "", errors.Wrap(newsError, "Unable to add article")
+		return "", errors.Wrap(newsError, "Unable to create article")
 	}
 	return result, nil
 }

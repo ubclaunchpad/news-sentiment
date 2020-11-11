@@ -29,8 +29,17 @@ func (c *Database) insertUser(user User) (string, error) {
 }
 
 // insert NewsPiece associated with User into mongo
-func insertArticle(article Article) error {
-	return nil
+func (c *Database) insertArticle(article Article) (string, error) {
+	collection := c.database.Collection("articles")
+	insertResult, err := collection.InsertOne(context.TODO(), article)
+	if err != nil {
+		return "failed", errors.Wrap(err, "Error inserting article into mongo database.")
+	}
+	url, ok := insertResult.InsertedID.(primitive.ObjectID)
+	if ok {
+		return "success", nil
+	}
+	return "failed", errors.New("Invalid id created: " + url.Hex())
 }
 
 // fetch User from mongo
