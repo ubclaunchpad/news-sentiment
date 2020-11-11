@@ -12,13 +12,15 @@ import (
 
 type dbtidy func()
 
+// Database representing mongo database connection
 type Database struct {
 	database *mongo.Database
 }
 
+// Init func connects to mongo db
 func Init() (*Database, dbtidy, error) {
-	dbUri := os.Getenv("MONGO_URI")
-	clientOptions := options.Client().ApplyURI(dbUri)
+	dbURI := os.Getenv("MONGO_URI")
+	clientOptions := options.Client().ApplyURI(dbURI)
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "mongo client connect")
@@ -34,6 +36,7 @@ func Init() (*Database, dbtidy, error) {
 	}, nil
 }
 
+// CreateNewUser adds new user to mongo db
 func (c *Database) CreateNewUser(email string, name string) (string, error) {
 	id, userError := c.insertUser(User{
 		Name:  name,
@@ -45,6 +48,7 @@ func (c *Database) CreateNewUser(email string, name string) (string, error) {
 
 	return id, nil
 }
+
 
 func (c *Database) CreateNewArticle(url string, title string, source string) (string, error) {
 	// need to add votes
