@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function showDummy(res) {
+
         if (res?.listArticles) {
             const listArticles = res.listArticles;
             listArticles.forEach(a => {
