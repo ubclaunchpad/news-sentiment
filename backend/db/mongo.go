@@ -20,13 +20,19 @@ func (c *Database) insertUser(user User) (string, error) {
 	return "", errors.New("Invalid id created")
 }
 
-// insert NewsPiece into mongo
-// func (c *Database) insertArticle(article Article) error {
-// collection := c.database.Collection("articles")
-// to set the id ourselves we need to
-// insertResult, err := collection.InsertOne(context.TODO(), &Article{})
-// 	return errors.New("Invalid id created")
-// }
+// insert NewsPiece associated with User into mongo
+func (c *Database) insertArticle(article Article) (string, error) {
+	collection := c.database.Collection("articles")
+	insertResult, err := collection.InsertOne(context.TODO(), article)
+	if err != nil {
+		return "failed", errors.Wrap(err, "Error inserting article into mongo database.")
+	}
+	id, ok := insertResult.InsertedID.(primitive.ObjectID)
+	if ok {
+		return id.Hex(), nil
+	}
+	return "failed", errors.New("Invalid id created: " + id.Hex())
+}
 
 // fetch User from mongo
 // func fetchUser(findUser User) (User, error) {

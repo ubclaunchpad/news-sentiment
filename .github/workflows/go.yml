@@ -53,7 +53,7 @@ jobs:
 
     - name: Test
       run: |
-        cd backend/
+        cd backend/tests
         go test
   
   lint:
