@@ -27,11 +27,11 @@ func (c *Database) insertArticle(article Article) (string, error) {
 	if err != nil {
 		return "failed", errors.Wrap(err, "Error inserting article into mongo database.")
 	}
-	url, ok := insertResult.InsertedID.(primitive.ObjectID)
+	id, ok := insertResult.InsertedID.(primitive.ObjectID)
 	if ok {
-		return url.Hex(), nil
+		return id.Hex(), nil
 	}
-	return "failed", errors.New("Invalid id created: " + url.Hex())
+	return "failed", errors.New("Invalid id created: " + id.Hex())
 }
 
 // fetch User from mongo
