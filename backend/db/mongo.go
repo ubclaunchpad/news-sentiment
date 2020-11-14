@@ -2,6 +2,9 @@ package db
 
 import (
 	"context"
+	"fmt"
+	"go.mongodb.org/mongo-driver/bson"
+	"log"
 
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -38,6 +41,34 @@ func (c *Database) insertArticle(article Article) (string, error) {
 // func fetchUser(findUser User) (User, error) {
 // 	return User{}, nil
 // }
+
+// fetch all Article from mongo
+func (c *Database) FindAllArticles() (int64, []Article, error) {
+	collection := c.database.Collection("articles")
+	cursor, err := collection.Find(context.TODO(), bson.D{})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer cursor.Close(context.TODO())
+
+	count, err := collection.CountDocuments(context.TODO(), bson.D{})
+	articles := make([]Article, count)
+	//if err := cursor.All(context.TODO(), &articles); err != nil {
+	//	log.Fatal(err)
+	//}
+	for cursor.Next(context.TODO()) {
+		var article Article
+		if err := cursor.Decode(&article); err != nil {
+			log.Fatal(err)
+		}
+		articles = append(articles, article)
+		fmt.Println(article)
+	}
+	return count, articles, errors.New("Unable to find all articles")
+
+}
 
 // fetch NewsPiece from mongo
 // func fetchArticle(findNews Article) (Article, error) {
