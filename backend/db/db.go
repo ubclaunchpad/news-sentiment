@@ -49,7 +49,6 @@ func (c *Database) CreateNewUser(email string, name string) (string, error) {
 	return id, nil
 }
 
-
 func (c *Database) CreateNewArticle(url string, title string, source string) (string, error) {
 	// need to add votes
 	result, newsError := c.insertArticle(Article{
@@ -61,4 +60,13 @@ func (c *Database) CreateNewArticle(url string, title string, source string) (st
 		return "", errors.Wrap(newsError, "Unable to create article")
 	}
 	return result, nil
+}
+
+// GetAllArticles gets all articles from db, formatted to Article type
+func (c *Database) GetAllArticles() (int64, []Article, error) {
+	count, articles, err := c.FindAllArticles()
+	if err != nil {
+		return -1, articles, errors.Wrap(err, "Unable to get all artiles")
+	}
+	return count, articles, nil
 }

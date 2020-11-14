@@ -25,6 +25,7 @@ func (s *server) handleRoutes() error {
 
 	router.HandleFunc("/users/", s.handleAddUser()).Methods("POST")
 	router.HandleFunc("/users/{id}", s.handleGetUser()).Methods("GET")
+	router.HandleFunc("/articles", s.handleGetArticles()).Methods("GET")
 	router.HandleFunc("/articles/", s.handleAddArticle()).Methods("POST")
 	router.HandleFunc("/articles/{id}", s.handleGetArticle()).Methods("GET")
 	fmt.Printf("Running server on port %s\n", port)
@@ -43,6 +44,7 @@ func (s *server) handleGetUser() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
 		id := vars["id"]
+		// need to search for user in mongo?
 		fmt.Fprintf(w, "Requesting details for user: "+id)
 	}
 }
@@ -70,6 +72,41 @@ func (s *server) handleAddUser() http.HandlerFunc {
 			ID string `json:"id"`
 		}
 		s.respond(w, req, UserAddedResponse{ID: id}, 200)
+	}
+}
+
+//GET: endpoint for all articles
+func (s *server) handleGetArticles() http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		fmt.Fprintf(w, "Requesting list of all articles")
+
+		type ArticleJson struct {
+			Title string `json:"title"`
+			URL   string `json:"url"`
+			//Votes []Vote `json:"votes"`
+		}
+
+		count, results, err := s.db.GetAllArticles()
+
+		if err != nil {
+			s.respond(w, req, makeErrorResponse(err), 500)
+			return
+		}
+
+		var articles = make([]ArticleJson, count)
+		var article ArticleJson
+		for i, a := range results {
+			article = ArticleJson{
+				Title: a.Title,
+				URL: a.URL,
+				//Votes: a.Votes
+			}
+			articles[i] = article
+		}
+		type ArticlesResponse struct {
+			Articles []ArticleJson `json:"articles"`
+		}
+		s.respond(w, req, ArticlesResponse{Articles: articles}, 200)
 	}
 }
 
