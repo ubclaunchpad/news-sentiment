@@ -1,6 +1,7 @@
 .idea*
 **/.env
 *.exe
+backend/bin
 
 */mongo-volume
 server/*

@@ -1,0 +1,76 @@
+{
+  "id":"newsSources",
+  "numRows": 14,
+  "dataRows:":
+  [
+    {
+      "name":"BBC",
+      "baseUrl":"https://www.bbc.com/",
+      "country":"UK"
+    },
+    {
+      "name":"The New York Times",
+      "baseUrl":"https://www.nytimes.com/",
+      "country":"US"
+    },
+    {
+      "name":"Business Insider",
+      "baseUrl":"https://www.businessinsider.com/",
+      "country":"US"
+    },
+    {
+      "name":"The Guardian",
+      "baseUrl":"https://www.theguardian.com/",
+      "country":"UK"
+    },
+    {
+      "name":"CNN",
+      "baseUrl":"https://www.cnn.com/",
+      "country":"US"
+    },
+    {
+      "name":"NBC News",
+      "baseUrl":"https://www.nbcnews.com/",
+      "country":"US"
+    },
+    {
+      "name":"Fox News",
+      "baseUrl":"https://www.foxnews.com/",
+      "country":"US"
+    },
+    {
+      "name":"The Washington Post",
+      "baseUrl":"https://www.washingtonpost.com/",
+      "country":"US"
+    },
+    {
+      "name":"Vox",
+      "baseUrl":"https://www.vox.com/",
+      "country":"US"
+    },
+    {
+      "name":"Daily Mail",
+      "baseUrl":"https://www.dailymail.co.uk/",
+      "country":"UK"
+    },
+    {
+      "name":"CBC",
+      "baseUrl":"https://www.cbc.ca/",
+      "country":"Canada"
+    },
+    {
+      "name":"The Globe and Mail",
+      "baseUrl":"https://www.theglobeandmail.com/",
+      "country":"Canada"},
+    {
+      "name":"CTV News",
+      "baseUrl":"https://www.ctvnews.ca/",
+      "country":"Canada"
+    },
+    {
+      "name":"Global News",
+      "baseUrl":"https://globalnews.ca/",
+      "country":"Canada"
+    }
+  ]
+}
