@@ -29,6 +29,7 @@
   "options_page": "frontend/options.html",
   "permissions": [
     "tabs",
+    "storage",
     "https://*/*",
     "http://*/*",
     "<all_urls>"
