@@ -60,18 +60,18 @@ func (s *server) handleAddUser() http.HandlerFunc {
 
 		var user UserJson
 		if err := json.NewDecoder(req.Body).Decode(&user); err != nil {
-			s.respond(w, req, makeErrorResponse(err), 400)
+			s.respond(w, req, makeErrorResponse(err), http.StatusBadRequest)
 			return
 		}
 		id, err := s.db.CreateNewUser(user.Name, user.Email)
 		if err != nil {
-			s.respond(w, req, makeErrorResponse(err), 500)
+			s.respond(w, req, makeErrorResponse(err), http.StatusInternalServerError)
 			return
 		}
 		type UserAddedResponse struct {
 			ID string `json:"id"`
 		}
-		s.respond(w, req, UserAddedResponse{ID: id}, 200)
+		s.respond(w, req, UserAddedResponse{ID: id}, http.StatusCreated)
 	}
 }
 
@@ -125,19 +125,19 @@ func (s *server) handleAddArticle() http.HandlerFunc {
 		}
 		var article ArticleJSON
 		if err := json.NewDecoder(req.Body).Decode(&article); err != nil {
-			s.respond(w, req, makeErrorResponse(err), 400)
+			s.respond(w, req, makeErrorResponse(err), http.StatusBadRequest)
 			return
 		}
 		result, err := s.db.CreateNewArticle(article.URL, article.Title, article.Source)
 		if err != nil {
-			s.respond(w, req, makeErrorResponse(err), 500)
+			s.respond(w, req, makeErrorResponse(err), http.StatusInternalServerError)
 			return
 		}
 		// TODO: what should the response return?
 		type ArticleAddedResponse struct {
 			Result string `json:"result"`
 		}
-		s.respond(w, req, ArticleAddedResponse{Result: result}, 200)
+		s.respond(w, req, ArticleAddedResponse{Result: result}, http.StatusCreated)
 	}
 }
 
