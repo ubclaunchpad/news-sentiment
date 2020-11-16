@@ -5,3 +5,4 @@ backend/bin
 
 */mongo-volume
 server/*
+*.code-workspace
