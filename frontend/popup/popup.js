@@ -1,5 +1,24 @@
 document.addEventListener('DOMContentLoaded', function() {
 
+    chrome.storage.sync.get('hasUserUsedNewsSentiment', function(result) {
+        if (!result?.value) {
+            const outerContainer = document.getElementById('outerContainer');
+            const childContainer = document.getElementById('childContainer');
+            const startingDiv = `<div id="outerContainer">
+                                        <div>STARTING PAGE</div>
+                                </div>`;
+            outerContainer.innerHTML = startingDiv;
+        }
+        console.log('Value currently is ' + result?.['hasUserUsedNewsSentiment']);
+    });
+
+    chrome.storage.sync.set({'hasUserUsedNewsSentiment': 'NEW VALUE'}, function() {
+        console.log('Value is set');
+        chrome.storage.sync.get('hasUserUsedNewsSentiment', function(result) {
+            console.log('Value is ' + result?.['hasUserUsedNewsSentiment']);
+        });
+    });
+
     document.getElementById('contentClick').addEventListener('click', contentOnClick, false);
     document.getElementById('backgroundClick').addEventListener('click', bkgOnClick, false);
     document.getElementById('dummyURLs').addEventListener('click', dummyOnClick, false);
