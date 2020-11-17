@@ -1,27 +1,39 @@
 document.addEventListener('DOMContentLoaded', function() {
-
-    chrome.storage.sync.get('hasUserUsedNewsSentiment', function(result) {
-        if (!result?.value) {
-            const outerContainer = document.getElementById('outerContainer');
-            const childContainer = document.getElementById('childContainer');
-            const startingDiv = `<div id="outerContainer">
+    const startingView = `<div id="outerContainer">
                                         <div>STARTING PAGE</div>
+                                        <button id="toMain">click to set user rating to center and enter main</button>
                                 </div>`;
-            outerContainer.innerHTML = startingDiv;
+    const mainView = `<div id="childContainer">
+                                    <button id="contentClick">click to get h1 and url from content.js</button>
+                                    <button id="backgroundClick">click for url from background.js</button>
+                                    <button id="dummyURLs">show list of dummy articles</button>
+                                    <script src="popup.js" charset="UTF-8"></script>
+                               </div>`;
+    const outerContainer = document.getElementById('outerContainer');
+
+    chrome.storage.sync.get('userRating', function(result) {
+        if (!result?.['userRating']) {
+            outerContainer.innerHTML = startingView;
+            document.getElementById('toMain')?.addEventListener('click', setUserRating, false);
         }
-        console.log('Value currently is ' + result?.['hasUserUsedNewsSentiment']);
+        console.log('Value currently is ' + result?.['userRating']);
     });
 
-    chrome.storage.sync.set({'hasUserUsedNewsSentiment': 'NEW VALUE'}, function() {
-        console.log('Value is set');
-        chrome.storage.sync.get('hasUserUsedNewsSentiment', function(result) {
-            console.log('Value is ' + result?.['hasUserUsedNewsSentiment']);
+    document.getElementById('contentClick')?.addEventListener('click', contentOnClick, false);
+    document.getElementById('backgroundClick')?.addEventListener('click', bkgOnClick, false);
+    document.getElementById('dummyURLs')?.addEventListener('click', dummyOnClick, false);
+
+    function setUserRating() {
+        console.log("in set user rating");
+        // add a slider and allow user to set their value
+        chrome.storage.sync.set({'userRating': 'center'}, function() {
+            console.log('Value is set');
+            chrome.storage.sync.get('userRating', function(result) {
+                console.log('Value is ' + result?.['userRating']);
+            });
+            outerContainer.innerHTML = mainView;
         });
-    });
-
-    document.getElementById('contentClick').addEventListener('click', contentOnClick, false);
-    document.getElementById('backgroundClick').addEventListener('click', bkgOnClick, false);
-    document.getElementById('dummyURLs').addEventListener('click', dummyOnClick, false);
+    }
 
     function contentOnClick() {
         chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
