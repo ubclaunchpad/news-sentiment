@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
             outerContainer.innerHTML = startingView;
             document.getElementById('toMain')?.addEventListener('click', setUserRating, false);
         }
-        console.log('Value currently is ' + result?.['userRating']);
     });
 
     document.getElementById('contentClick')?.addEventListener('click', contentOnClick, false);
@@ -24,13 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('Urls')?.addEventListener('click', getListOnClick, false);
 
     function setUserRating() {
-        console.log("in set user rating");
         // add a slider and allow user to set their value
         chrome.storage.sync.set({'userRating': 'center'}, function() {
-            console.log('Value is set');
-            chrome.storage.sync.get('userRating', function(result) {
-                console.log('Value is ' + result?.['userRating']);
-            });
             outerContainer.innerHTML = mainView;
         });
     }
