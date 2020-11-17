@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const startingView = `<div id="outerContainer">
+    const startingView = `<div id="childContainer">
                                         <div>STARTING PAGE</div>
                                         <button id="toMain">click to set user rating to center and enter main</button>
                                 </div>`;
