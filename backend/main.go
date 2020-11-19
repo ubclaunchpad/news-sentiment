@@ -27,6 +27,7 @@ func runServer() error {
 	srv := &server{
 		db: db,
 	}
+	go srv.initArticles()
 	return srv.handleRoutes()
 }
 
