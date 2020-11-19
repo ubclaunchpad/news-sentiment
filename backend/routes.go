@@ -85,14 +85,14 @@ func (s *server) handleGetArticles() http.HandlerFunc {
 			//Votes []Vote `json:"votes"`
 		}
 
-		count, results, err := s.db.GetAllArticles()
+		results, err := s.db.GetAllArticles()
 
 		if err != nil {
 			s.respond(w, req, makeErrorResponse(err), 500)
 			return
 		}
 
-		var articles = make([]ArticleJson, count)
+		var articles = make([]ArticleJson, 0)
 		var article ArticleJson
 		for _, a := range results {
 			article = ArticleJson{
@@ -143,6 +143,7 @@ func (s *server) handleAddArticle() http.HandlerFunc {
 
 func (s *server) respond(w http.ResponseWriter, r *http.Request, data interface{}, status int) {
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(status)
 	if data != nil {
 		encoder := json.NewEncoder(w)
