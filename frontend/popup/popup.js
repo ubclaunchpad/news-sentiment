@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('contentClick').addEventListener('click', contentOnClick, false);
     document.getElementById('backgroundClick').addEventListener('click', bkgOnClick, false);
-    document.getElementById('dummyURLs').addEventListener('click', dummyOnClick, false);
+    document.getElementById('Urls').addEventListener('click', getListOnClick, false);
 
     function contentOnClick() {
         chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
@@ -15,9 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function dummyOnClick() {
+    function getListOnClick() {
         chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
-            chrome.tabs.sendMessage(tabs[0].id,{request: 'getDummy'}, null, showDummy);
+            chrome.tabs.sendMessage(tabs[0].id,{request: 'getList'}, null, showList);
         });
     }
 
@@ -48,15 +48,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function showDummy(res) {
-
+    function showList(res) {
         if (res?.listArticles) {
             const listArticles = res.listArticles;
             listArticles.forEach(a => {
                 const anchorEl = document.createElement('a');
-                anchorEl.textContent = a.TITLE;
-                anchorEl.href = a.URL;
-                anchorEl.onclick = () => openUrlInNewTab(a.URL);
+                anchorEl.textContent = a.title;
+                anchorEl.href = a.url;
+                anchorEl.onclick = () => openUrlInNewTab(a.url);
                 document.body.appendChild(anchorEl);
             });
         }
