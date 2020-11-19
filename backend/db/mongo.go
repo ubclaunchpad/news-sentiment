@@ -2,9 +2,8 @@ package db
 
 import (
 	"context"
-	"fmt"
+
 	"go.mongodb.org/mongo-driver/bson"
-	"log"
 
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -48,25 +47,25 @@ func (c *Database) FindAllArticles() (int64, []Article, error) {
 	cursor, err := collection.Find(context.TODO(), bson.D{})
 
 	if err != nil {
-		log.Fatal(err)
+		return 0, nil, err
 	}
 
 	defer cursor.Close(context.TODO())
 
 	count, err := collection.CountDocuments(context.TODO(), bson.D{})
+	if err != nil {
+		return 0, nil, err
+	}
 	articles := make([]Article, count)
-	//if err := cursor.All(context.TODO(), &articles); err != nil {
-	//	log.Fatal(err)
-	//}
+
 	for cursor.Next(context.TODO()) {
 		var article Article
 		if err := cursor.Decode(&article); err != nil {
-			log.Fatal(err)
+			return 0, nil, errors.Wrap(err, "Unable to iterate on cursor")
 		}
 		articles = append(articles, article)
-		fmt.Println(article)
 	}
-	return count, articles, errors.New("Unable to find all articles")
+	return count, articles, nil
 
 }
 
