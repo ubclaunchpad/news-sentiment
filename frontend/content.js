@@ -11,21 +11,13 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 });
 
 function getData(url) {
-    const fetchedData = fetch(url)
+    return fetch(url)
       .then((res) => {
-        if (res.ok) {
-          console.log("Success");
-        } else {
-          console.log("Failure");
-        }
         return res.json();
       })
       .then((result) => {
         return result;
       })
-      .catch(console.error());
-  
-    return fetchedData;
   }
   
   
