@@ -63,10 +63,6 @@ func (c *Database) CreateNewArticle(url string, title string, source string) (st
 }
 
 // GetAllArticles gets all articles from db, formatted to Article type
-func (c *Database) GetAllArticles() (int64, []Article, error) {
-	count, articles, err := c.FindAllArticles()
-	if err != nil {
-		return -1, articles, errors.Wrap(err, "Unable to get all artiles")
-	}
-	return count, articles, nil
+func (c *Database) GetAllArticles() ([]Article, error) {
+	return c.FindAllArticles()
 }
