@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os"
 
@@ -79,8 +78,6 @@ func (s *server) handleAddUser() http.HandlerFunc {
 //GET: endpoint for all articles
 func (s *server) handleGetArticles() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		fmt.Fprintf(w, "Requesting list of all articles")
-
 		type ArticleJson struct {
 			Title string `json:"title"`
 			URL   string `json:"url"`
@@ -96,18 +93,16 @@ func (s *server) handleGetArticles() http.HandlerFunc {
 
 		var articles = make([]ArticleJson, count)
 		var article ArticleJson
-		for i, a := range results {
+
+		for _, a := range results {
 			article = ArticleJson{
 				Title: a.Title,
-				URL: a.URL,
+				URL:   a.URL,
 				//Votes: a.Votes
 			}
-			articles[i] = article
+			articles = append(articles, article)
 		}
-		type ArticlesResponse struct {
-			Articles []ArticleJson `json:"articles"`
-		}
-		s.respond(w, req, ArticlesResponse{Articles: articles}, 200)
+		s.respond(w, req, articles, http.StatusOK)
 	}
 }
 
@@ -123,16 +118,36 @@ func (s *server) handleGetArticle() http.HandlerFunc {
 //POST: endpoint to add a single article
 func (s *server) handleAddArticle() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		reqBody, _ := ioutil.ReadAll(req.Body)
-		fmt.Fprintf(w, "%+v", string(reqBody))
+		type ArticleJSON struct {
+			Source string `json:"source"`
+			Title  string `json:"title"`
+			URL    string `json:"url"`
+		}
+		var article ArticleJSON
+		if err := json.NewDecoder(req.Body).Decode(&article); err != nil {
+			s.respond(w, req, makeErrorResponse(err), 400)
+			return
+		}
+		result, err := s.db.CreateNewArticle(article.URL, article.Title, article.Source)
+		if err != nil {
+			s.respond(w, req, makeErrorResponse(err), 500)
+			return
+		}
+		// TODO: what should the response return?
+		type ArticleAddedResponse struct {
+			Result string `json:"result"`
+		}
+		s.respond(w, req, ArticleAddedResponse{Result: result}, 200)
 	}
 }
 
 func (s *server) respond(w http.ResponseWriter, r *http.Request, data interface{}, status int) {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	if data != nil {
-		if err := json.NewEncoder(w).Encode(data); err != nil {
-			_ = json.NewEncoder(w).Encode(ErrorJson{Err: "Unable to encode response"})
+		encoder := json.NewEncoder(w)
+		if err := encoder.Encode(data); err != nil {
+			_ = encoder.Encode(ErrorJson{Err: "Unable to encode response"})
 		}
 	}
 }

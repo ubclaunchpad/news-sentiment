@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 
-	// "go.mongodb.org/mongo-driver/bson"
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -50,6 +49,19 @@ func (c *Database) CreateNewUser(email string, name string) (string, error) {
 	return id, nil
 }
 
+func (c *Database) CreateNewArticle(url string, title string, source string) (string, error) {
+	// need to add votes
+	result, newsError := c.insertArticle(Article{
+		Title:  title,
+		URL:    url,
+		Source: source,
+	})
+	if newsError != nil {
+		return "", errors.Wrap(newsError, "Unable to create article")
+	}
+	return result, nil
+}
+
 // GetAllArticles gets all articles from db, formatted to Article type
 func (c *Database) GetAllArticles() (int64, []Article, error) {
 	count, articles, err := c.FindAllArticles()
@@ -58,9 +70,3 @@ func (c *Database) GetAllArticles() (int64, []Article, error) {
 	}
 	return count, articles, nil
 }
-
-// CreateNewArticle creates an article and aadds to mongo db
-// func (c *Database) CreateNewArticle(url string, title string, source string) (string, error) {
-// id, articleError = c.insertArticle()
-// 	return "", errors.New("error")
-// }

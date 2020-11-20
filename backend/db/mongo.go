@@ -2,9 +2,7 @@ package db
 
 import (
 	"context"
-	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
-	"log"
 
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -23,13 +21,19 @@ func (c *Database) insertUser(user User) (string, error) {
 	return "", errors.New("Invalid id created")
 }
 
-// insert NewsPiece into mongo
-// func (c *Database) insertArticle(article Article) error {
-// collection := c.database.Collection("articles")
-// to set the id ourselves we need to
-// insertResult, err := collection.InsertOne(context.TODO(), &Article{})
-// 	return errors.New("Invalid id created")
-// }
+// insert NewsPiece associated with User into mongo
+func (c *Database) insertArticle(article Article) (string, error) {
+	collection := c.database.Collection("articles")
+	insertResult, err := collection.InsertOne(context.TODO(), article)
+	if err != nil {
+		return "failed", errors.Wrap(err, "Error inserting article into mongo database.")
+	}
+	id, ok := insertResult.InsertedID.(primitive.ObjectID)
+	if ok {
+		return id.Hex(), nil
+	}
+	return "failed", errors.New("Invalid id created: " + id.Hex())
+}
 
 // fetch User from mongo
 // func fetchUser(findUser User) (User, error) {
@@ -42,26 +46,26 @@ func (c *Database) FindAllArticles() (int64, []Article, error) {
 	cursor, err := collection.Find(context.TODO(), bson.D{})
 
 	if err != nil {
-		log.Fatal(err)
+		return 0, nil, err
 	}
 
 	defer cursor.Close(context.TODO())
 
 	count, err := collection.CountDocuments(context.TODO(), bson.D{})
+	if err != nil {
+		return 0, nil, err
+	}
+
 	articles := make([]Article, count)
-	//if err := cursor.All(context.TODO(), &articles); err != nil {
-	//	log.Fatal(err)
-	//}
+
 	for cursor.Next(context.TODO()) {
 		var article Article
 		if err := cursor.Decode(&article); err != nil {
-			log.Fatal(err)
+			return 0, nil, errors.Wrap(err, "Unable to iterate on cursor")
 		}
 		articles = append(articles, article)
-		fmt.Println(article)
 	}
-	return count, articles, errors.New("Unable to find all articles")
-
+	return count, articles, nil
 }
 
 // fetch NewsPiece from mongo
