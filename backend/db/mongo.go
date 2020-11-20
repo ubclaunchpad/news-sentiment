@@ -38,11 +38,11 @@ func (c *Database) insertArticle(article Article) (string, error) {
 
 func (c *Database) insertUnique(article Article) error {
 	collection := c.database.Collection("articles")
-	filterCursor, err := collection.CountDocuments(context.TODO(), bson.M{"url": article.URL})
+	count, err := collection.CountDocuments(context.TODO(), bson.M{"url": article.URL})
 	if err != nil {
 		return err
 	}
-	if filterCursor == 0 {
+	if count == 0 {
 		_, err = c.insertArticle(article)
 		return err
 	}

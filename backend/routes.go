@@ -96,7 +96,7 @@ func (s *server) handleAddArticle() http.HandlerFunc {
 			s.respond(w, req, makeErrorResponse(err), http.StatusBadRequest)
 			return
 		}
-		result, err := s.db.CreateNewArticle(article.URL, article.Title)
+		err := s.db.AddArticleUnique(article.URL, article.Title)
 		if err != nil {
 			s.respond(w, req, makeErrorResponse(err), http.StatusInternalServerError)
 			return
@@ -105,7 +105,7 @@ func (s *server) handleAddArticle() http.HandlerFunc {
 		type ArticleAddedResponse struct {
 			Result string `json:"result"`
 		}
-		s.respond(w, req, ArticleAddedResponse{Result: result}, http.StatusCreated)
+		s.respond(w, req, ArticleAddedResponse{Result: "created"}, http.StatusCreated)
 	}
 }
 
