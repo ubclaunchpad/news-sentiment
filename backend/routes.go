@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -11,6 +12,11 @@ import (
 
 type ErrorJson struct {
 	Err string `json:"error"`
+}
+
+type ArticleJSON struct {
+	Title string `json:"title"`
+	URL   string `json:"url"`
 }
 
 func makeErrorResponse(err error) *ErrorJson {
@@ -85,17 +91,12 @@ func (s *server) handleGetArticle() http.HandlerFunc {
 //POST: endpoint to add a single article
 func (s *server) handleAddArticle() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		type ArticleJSON struct {
-			Source string `json:"source"`
-			Title  string `json:"title"`
-			URL    string `json:"url"`
-		}
 		var article ArticleJSON
 		if err := json.NewDecoder(req.Body).Decode(&article); err != nil {
 			s.respond(w, req, makeErrorResponse(err), http.StatusBadRequest)
 			return
 		}
-		result, err := s.db.CreateNewArticle(article.URL, article.Title, article.Source)
+		err := s.db.AddArticleUnique(article.URL, article.Title)
 		if err != nil {
 			s.respond(w, req, makeErrorResponse(err), http.StatusInternalServerError)
 			return
@@ -104,7 +105,7 @@ func (s *server) handleAddArticle() http.HandlerFunc {
 		type ArticleAddedResponse struct {
 			Result string `json:"result"`
 		}
-		s.respond(w, req, ArticleAddedResponse{Result: result}, http.StatusCreated)
+		s.respond(w, req, ArticleAddedResponse{Result: "created"}, http.StatusCreated)
 	}
 }
 
@@ -113,6 +114,34 @@ func (s *server) respond(w http.ResponseWriter, r *http.Request, data interface{
 	if data != nil {
 		if err := json.NewEncoder(w).Encode(data); err != nil {
 			_ = json.NewEncoder(w).Encode(ErrorJson{Err: "Unable to encode response"})
+		}
+	}
+}
+
+func (s *server) initArticles() {
+	apiKey := os.Getenv("NEWS_API_KEY")
+	endpoint := os.Getenv("NEWS_API_ENDPOINT")
+	url := fmt.Sprintf("%s?country=ca&apiKey=%s", endpoint, apiKey)
+	res, err := http.Get(url)
+	if err != nil {
+		log.Println("Unable to retrieve top headlines")
+		return
+	}
+
+	type InitialArticleJSON struct {
+		Articles []ArticleJSON `json:"articles"`
+	}
+	var initArticle InitialArticleJSON
+
+	if err := json.NewDecoder(res.Body).Decode(&initArticle); err != nil {
+		log.Println("Unable to decode response!")
+		return
+	}
+	for _, article := range initArticle.Articles {
+		err = s.db.AddArticleUnique(article.URL, article.Title)
+		if err != nil {
+			log.Println("Unable to insert article")
+			return
 		}
 	}
 }

@@ -49,16 +49,9 @@ func (c *Database) CreateNewUser(email string, name string) (string, error) {
 	return id, nil
 }
 
-
-func (c *Database) CreateNewArticle(url string, title string, source string) (string, error) {
-	// need to add votes
-	result, newsError := c.insertArticle(Article{
-		Title:  title,
-		URL:    url,
-		Source: source,
+func (c *Database) AddArticleUnique(url string, title string) error {
+	return c.insertUnique(Article{
+		Title: title,
+		URL:   url,
 	})
-	if newsError != nil {
-		return "", errors.Wrap(newsError, "Unable to create article")
-	}
-	return result, nil
 }
