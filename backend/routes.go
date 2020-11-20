@@ -120,7 +120,8 @@ func (s *server) respond(w http.ResponseWriter, r *http.Request, data interface{
 
 func (s *server) initArticles() {
 	apiKey := os.Getenv("NEWS_API_KEY")
-	url := fmt.Sprintf("http://newsapi.org/v2/top-headlines?country=ca&apiKey=%s", apiKey)
+	endpoint := os.Getenv("NEWS_API_ENDPOINT")
+	url := fmt.Sprintf("%s?country=ca&apiKey=%s", endpoint, apiKey)
 	res, err := http.Get(url)
 	if err != nil {
 		log.Println("Unable to retrieve top headlines")
