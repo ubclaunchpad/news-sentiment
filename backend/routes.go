@@ -125,6 +125,7 @@ func (s *server) initArticles() {
 	res, err := http.Get(url)
 	if err != nil {
 		log.Println("Unable to retrieve top headlines")
+		return
 	}
 
 	type InitialArticleJSON struct {
@@ -134,11 +135,13 @@ func (s *server) initArticles() {
 
 	if err := json.NewDecoder(res.Body).Decode(&initArticle); err != nil {
 		log.Println("Unable to decode response!")
+		return
 	}
 	for _, article := range initArticle.Articles {
 		err = s.db.AddArticleUnique(article.URL, article.Title)
 		if err != nil {
-			log.Println("Unable to inser article")
+			log.Println("Unable to insert article")
+			return
 		}
 	}
 }
