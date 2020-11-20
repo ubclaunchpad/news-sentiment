@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-
 	"go.mongodb.org/mongo-driver/bson"
 
 	"github.com/pkg/errors"
@@ -55,6 +54,7 @@ func (c *Database) FindAllArticles() ([]Article, error) {
 	if err != nil {
 		return nil, err
 	}
+  
 	var articles []Article
 
 	for cursor.Next(context.TODO()) {
@@ -64,8 +64,8 @@ func (c *Database) FindAllArticles() ([]Article, error) {
 		}
 		articles = append(articles, article)
 	}
-	return articles, nil
 
+	return articles, nil
 }
 
 // fetch NewsPiece from mongo

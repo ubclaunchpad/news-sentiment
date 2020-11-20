@@ -78,7 +78,6 @@ func (s *server) handleAddUser() http.HandlerFunc {
 //GET: endpoint for all articles
 func (s *server) handleGetArticles() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-
 		type ArticleJson struct {
 			Title string `json:"title"`
 			URL   string `json:"url"`
@@ -94,6 +93,7 @@ func (s *server) handleGetArticles() http.HandlerFunc {
 
 		var articles = make([]ArticleJson, 0)
 		var article ArticleJson
+
 		for _, a := range results {
 			article = ArticleJson{
 				Title: a.Title,
