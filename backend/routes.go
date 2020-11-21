@@ -13,6 +13,12 @@ type ErrorJson struct {
 	Err string `json:"error"`
 }
 
+type ArticleJSON struct {
+	Source string `json:"source"`
+	Title  string `json:"title"`
+	URL    string `json:"url"`
+}
+
 func makeErrorResponse(err error) *ErrorJson {
 	return &ErrorJson{Err: err.Error()}
 }
@@ -84,7 +90,7 @@ func (s *server) handleGetArticles() http.HandlerFunc {
 			//Votes []Vote `json:"votes"`
 		}
 
-		results, err := s.db.GetAllArticles()
+		results, err := s.db.FindAllArticles()
 
 		if err != nil {
 			s.respond(w, req, makeErrorResponse(err), 500)
@@ -117,11 +123,6 @@ func (s *server) handleGetArticle() http.HandlerFunc {
 //POST: endpoint to add a single article
 func (s *server) handleAddArticle() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		type ArticleJSON struct {
-			Source string `json:"source"`
-			Title  string `json:"title"`
-			URL    string `json:"url"`
-		}
 		var article ArticleJSON
 		if err := json.NewDecoder(req.Body).Decode(&article); err != nil {
 			s.respond(w, req, makeErrorResponse(err), http.StatusBadRequest)

@@ -19,7 +19,7 @@ func main() {
 }
 
 func runServer() error {
-	db, dbtidy, err := db.Init()
+	db, dbtidy, err := db.InitMongo()
 	if err != nil {
 		return errors.Wrap(err, "setup database")
 	}
@@ -31,5 +31,5 @@ func runServer() error {
 }
 
 type server struct {
-	db *db.Database
+	db db.Database
 }

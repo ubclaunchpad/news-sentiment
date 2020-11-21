@@ -9,9 +9,14 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// insert User into mongo
-func (c *Database) insertUser(user User) (string, error) {
-	collection := c.database.Collection("users") // TODO: Un-hardcode this
+// CreateNewUser adds new user to mongo db
+func (md *MongoDatabase) CreateNewUser(email string, name string) (string, error) {
+	user := User{
+		Name:  name,
+		Email: email,
+	}
+
+	collection := md.mongo.Collection("users") // TODO: Un-hardcode this
 	insertResult, err := collection.InsertOne(context.TODO(), user)
 	if err != nil {
 		return "", errors.Wrap(err, "Error inserting into mongo database")
@@ -22,9 +27,15 @@ func (c *Database) insertUser(user User) (string, error) {
 	return "", errors.New("Invalid id created")
 }
 
-// insert NewsPiece associated with User into mongo
-func (c *Database) insertArticle(article Article) (string, error) {
-	collection := c.database.Collection("articles")
+func (md *MongoDatabase) CreateNewArticle(url string, title string, source string) (string, error) {
+	// need to add votes
+	article := Article{
+		Title:  title,
+		URL:    url,
+		Source: source,
+	}
+
+	collection := md.mongo.Collection("articles")
 	insertResult, err := collection.InsertOne(context.TODO(), article)
 	if err != nil {
 		return "failed", errors.Wrap(err, "Error inserting article into mongo database.")
@@ -42,8 +53,8 @@ func (c *Database) insertArticle(article Article) (string, error) {
 // }
 
 // fetch all Article from mongo
-func (c *Database) FindAllArticles() ([]Article, error) {
-	collection := c.database.Collection("articles")
+func (md *MongoDatabase) FindAllArticles() ([]Article, error) {
+	collection := md.mongo.Collection("articles")
 	cursor, err := collection.Find(context.TODO(), bson.D{})
 
 	if err != nil {
