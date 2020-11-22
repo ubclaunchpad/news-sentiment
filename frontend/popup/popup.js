@@ -1,31 +1,27 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const startingView = `<div id="childContainer">
-                                        <div>STARTING PAGE</div>
-                                        <button id="toMain">click to set user rating to center and enter main</button>
-                                </div>`;
-    const mainView = `<div id="childContainer">
-                                    <button id="contentClick">click to get h1 and url from content.js</button>
-                                    <button id="backgroundClick">click for url from background.js</button>
-                                    <button id="dummyURLs">show list of dummy articles</button>
-                                    <script src="popup.js" charset="UTF-8"></script>
-                               </div>`;
-    const outerContainer = document.getElementById('outerContainer');
+    document.getElementById('toMain')?.addEventListener('click', setUserRating, false);
+    document.getElementById('contentClick')?.addEventListener('click', contentOnClick, false);
+    document.getElementById('getArticles')?.addEventListener('click', showListOnClick, false);
 
     chrome.storage.sync.get('userRating', function(result) {
         if (!result?.['userRating']) {
-            outerContainer.innerHTML = startingView;
-            document.getElementById('toMain')?.addEventListener('click', setUserRating, false);
+            const mainView = document.getElementById('mainView');
+            const startingView = document.getElementById('startingView');
+            mainView.style.display = 'none';
+            startingView.style.display = 'block';
         }
     });
 
-    document.getElementById('contentClick')?.addEventListener('click', contentOnClick, false);
-    document.getElementById('backgroundClick')?.addEventListener('click', bkgOnClick, false);
-    document.getElementById('Urls')?.addEventListener('click', getListOnClick, false);
-
     function setUserRating() {
         // add a slider and allow user to set their value
-        chrome.storage.sync.set({'userRating': 'center'}, function() {
-            outerContainer.innerHTML = mainView;
+        const startingSliderValue = document.getElementById("startingSlider")?.value;
+        const startingToggleChecked = document.getElementById('startingToggle')?.checked;
+        let userAlignment = startingToggleChecked ? 'na' : sliderValueToText(startingSliderValue); // save as the text representation of a political leaning
+        chrome.storage.sync.set({'userRating': userAlignment}, function() {
+            const mainView = document.getElementById('mainView');
+            const startingView = document.getElementById('startingView');
+            mainView.style.display = 'block';
+            startingView.style.display = 'none';
         });
     }
 
@@ -34,15 +30,10 @@ document.addEventListener('DOMContentLoaded', function() {
             chrome.tabs.sendMessage(tabs[0].id, {request: 'toContent'}, null, fromContent);
         });
     }
-    function bkgOnClick() {
-        chrome.tabs.query({currentWindow: true, active: true}, () => {
-            chrome.runtime.sendMessage({request: 'toBkg'}, fromBkg);
-        });
-    }
 
-    function getListOnClick() {
+    function showListOnClick() {
         chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
-            chrome.tabs.sendMessage(tabs[0].id,{request: 'getList'}, null, showList);
+            chrome.tabs.sendMessage(tabs[0].id,{request: 'getArticles'}, null, showArticleList);
         });
     }
 
@@ -63,17 +54,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function fromBkg(res) {
-        if (res?.currentUrl) {
-            const div = document.createElement('div');
-            div.textContent = res.currentUrl;
-            const br = document.createElement('br');
-            document.body.appendChild(div);
-            document.body.appendChild(br);
-        }
-    }
+    function showArticleList(res) {
 
-    function showList(res) {
         if (res?.listArticles) {
             const listArticles = res.listArticles;
             listArticles.forEach(a => {
@@ -92,11 +74,58 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var slider = document.getElementById("myRange");
     var output = document.getElementById("demo");
-    output.innerHTML = slider.value; // Display the default slider value
+    output.innerHTML = sliderValueToText(slider.value); // Display the default slider value
 
     // Update the current slider value (each time you drag the slider handle)
     slider.oninput = function() {
-    output.innerHTML = this.value;
-}
+        output.innerHTML = sliderValueToText(this.value);
+    }
+
+    // starting view slider:
+    const startingSlider = document.getElementById("startingSlider");
+    const startingSliderOutput = document.getElementById("startingSliderValue");
+    startingSliderOutput.innerHTML = sliderValueToText(startingSlider.value); // Display the default slider value
+    startingSlider.oninput = function() {
+        startingSliderOutput.innerHTML = sliderValueToText(this.value);
+    }
+
+    // starting view toggle:
+    const startingToggleValue = document.getElementById("startingToggle");
+    startingToggleValue.addEventListener('change', function() {
+        const slideContainer = document.getElementById('slideContainer');
+        if(this.checked) {
+            slideContainer.style.display = 'none';
+        } else {
+            slideContainer.style.display = 'block';
+        }
+    });
+    startingSliderOutput.innerHTML = sliderValueToText(startingSlider.value); // Display the default slider value
+    startingSlider.oninput = function() {
+        startingSliderOutput.innerHTML = sliderValueToText(this.value);
+    }
 
 }, false);
+
+function sliderValueToText(sliderValue) {
+    let userAlignment = 'na';
+    switch (sliderValue) {
+        case '0':
+            userAlignment = 'Left';
+            break;
+        case '1':
+            userAlignment = 'Center-left';
+            break;
+        case '2':
+            userAlignment = 'Center';
+            break;
+        case '3':
+            userAlignment = 'Center-right';
+            break;
+        case '4':
+            userAlignment = 'Right';
+            break;
+        default:
+            break;
+    }
+    return userAlignment;
+}
