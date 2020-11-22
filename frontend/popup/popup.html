@@ -6,13 +6,30 @@
     <link rel="stylesheet" type="text/css" href="popup.css">
 </head>
 <body>
-    <div id="outerContainer">
-        <div id="childContainer">
-            <button id="contentClick">click to get h1 and url from content.js</button>
-            <button id="backgroundClick">click for url from background.js</button>
-            <button id="Urls">show list of dummy articles</button>
-            <script src="popup.js" charset="UTF-8"></script>
+    <div id="mainView">
+        <button id="contentClick">click to get h1 and url from content.js</button>
+        <button id="getArticles">show list of dummy articles</button>
+        <script src="popup.js" charset="UTF-8"></script>
+
+        <div class="slidecontainer">
+            <input type="range" min="0" max="4" value="2" class="slider" id="myRange">
+            <p>Value: <span id="demo"></span></p>
         </div>
+    </div>
+    <div id="startingView">
+        <div>Welcome! Please set your political preference below:</div>
+        <div>
+            <span>I have no political preference/I do not know my political preference</span>
+            <label class="switch">
+                <input type="checkbox" id="startingToggle">
+                <span class="toggle round"></span>
+            </label>
+        </div>
+        <div class="slidecontainer" id="slideContainer">
+            <p>My political preference is: <span id="startingSliderValue"></span></p>
+            <input type="range" min="0" max="4" value="2" class="slider" id="startingSlider">
+        </div>
+        <button id="toMain">Enter</button>
     </div>
 </body>
 
