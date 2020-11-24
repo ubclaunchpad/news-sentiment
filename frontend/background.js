@@ -1,11 +1,32 @@
 console.log("background.js is executed when extension is installed or refreshed");
 
-const listOfInjectableURLRegex = [ // change these to the list of allowed news sources
-    "^https:\\/\\/www\\.google",
-    "^https:\\/\\/www\\.youtube\\.com",
-    "^https:\\/\\/www\\.stackoverflow\\.com",
-    "^https:\\/\\/www\\.bbc\\.com\\/news\\/"
+var listOfInjectableURLRegex = [ // change these to the list of allowed news sources
+    // "^https:\\/\\/www\\.google",
+    // "^https:\\/\\/www\\.youtube\\.com",
+    // "^https:\\/\\/www\\.stackoverflow\\.com",
+    // "^https:\\/\\/www\\.bbc\\.com\\/news\\/"
 ]
+
+// Parses allowed news sources from news-sources.json
+function parseAllowedNewsSource() {
+    // Fetches data from local .json file
+    fetch('../static/news-sources.json')
+        .then(response => response.json())
+        .then(json => addToListOfInjectableURLRegex(json))
+
+}
+
+// Helper function for parseAllowedNewsSource
+function addToListOfInjectableURLRegex(json) {
+    const size = json.numRows;
+    for (i = 0; i < size; i++) {
+        var rawUrl = json.dataRows[i].baseUrl;
+        var regexedUrl = new RegExp(rawUrl);
+        listOfInjectableURLRegex.push(regexedUrl);
+    }
+    // console.log(listOfInjectableURLRegex); // For Testing
+    // console.log("Done Parsing");           // For Testing
+}
 
 chrome.tabs.onActivated.addListener(tab => {
     console.log(tab); // will print out tabId and windowId as tab object in the background console
@@ -21,6 +42,7 @@ chrome.tabs.onActivated.addListener(tab => {
             }
         }
     });
+    parseAllowedNewsSource();
 });
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
