@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -80,10 +81,7 @@ func (s *server) handleAddUser() http.HandlerFunc {
 //GET: endpoint for all articles
 func (s *server) handleGetArticles() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		
-		//Get number of articles necessary
-		numArticles := mux.Vars(req)["count"]
-		fmt.Println("Limiting to "+ numArticles +" articles.")
+
 
 		type ArticleJson struct {
 			Title string `json:"title"`
@@ -100,7 +98,19 @@ func (s *server) handleGetArticles() http.HandlerFunc {
 
 		var articles = make([]ArticleJson, 0)
 		var article ArticleJson
-		for _, a := range results {
+
+		
+		//Get number of articles necessary
+		//ASSUMPTION: count <= SIZE(RESULTS); will fix this later
+		numArticles, err := strconv.Atoi(mux.Vars(req)["count"])
+		if numArticles == 0 { //NO COUNT SPECIFIED
+			fmt.Println("Getting ALL Articles...")
+			numArticles = len(results)
+		}else{
+			fmt.Printf("Limiting number of articles to  %d \n", numArticles)
+		}
+
+		for _, a := range results[:numArticles] {
 			article = ArticleJson{
 				Title: a.Title,
 				URL:   a.URL,
@@ -108,6 +118,7 @@ func (s *server) handleGetArticles() http.HandlerFunc {
 			}
 			articles = append(articles, article)
 		}
+
 		s.respond(w, req, articles, http.StatusOK)
 	}
 }
