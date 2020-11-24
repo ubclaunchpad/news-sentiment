@@ -61,7 +61,7 @@ jobs:
 
     - name: Test
       run: |
-        cd backend/tests
+        cd backend/
         make test
   
   lint:
