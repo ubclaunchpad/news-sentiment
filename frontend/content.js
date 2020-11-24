@@ -4,7 +4,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         const firstHeadingValue = heading[0]?.innerText;
         const url = window.location.href;
         sendResponse({firstHeadingValue: firstHeadingValue, url: url});
-    } else if (message.request === 'getList') {
+    } else if (message.request === 'getArticles') {
         getData('http://localhost:8090/articles').then(data => sendResponse({ listArticles: data }));
     }
     return true;
