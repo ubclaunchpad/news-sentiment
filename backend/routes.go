@@ -25,7 +25,9 @@ func (s *server) handleRoutes() error {
 
 	router.HandleFunc("/users/", s.handleAddUser()).Methods("POST")
 	router.HandleFunc("/users/{id}", s.handleGetUser()).Methods("GET")
-	router.HandleFunc("/articles", s.handleGetArticles()).Methods("GET")
+	//Adding route param...
+	router.HandleFunc("/articles/", s.handleGetArticles()).Methods("GET")
+	router.HandleFunc("/articles/{count}", s.handleGetArticles()).Methods("GET")
 	router.HandleFunc("/articles/", s.handleAddArticle()).Methods("POST")
 	router.HandleFunc("/articles/{id}", s.handleGetArticle()).Methods("GET")
 	fmt.Printf("Running server on port %s\n", port)
@@ -78,6 +80,11 @@ func (s *server) handleAddUser() http.HandlerFunc {
 //GET: endpoint for all articles
 func (s *server) handleGetArticles() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		
+		//Get number of articles necessary
+		numArticles := mux.Vars(req)["count"]
+		fmt.Println("Limiting to "+ numArticles +" articles.")
+
 		type ArticleJson struct {
 			Title string `json:"title"`
 			URL   string `json:"url"`
@@ -104,6 +111,9 @@ func (s *server) handleGetArticles() http.HandlerFunc {
 		s.respond(w, req, articles, http.StatusOK)
 	}
 }
+
+
+
 
 //GET: endpoint for a single article
 func (s *server) handleGetArticle() http.HandlerFunc {
