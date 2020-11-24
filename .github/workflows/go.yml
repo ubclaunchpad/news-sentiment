@@ -39,6 +39,16 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    services:
+      database: 
+        image: mongo:latest
+        env:
+          MONGO_INITDB_ROOT_USERNAME: admin
+          MONGO_INITDB_ROOT_PASSWORD: admin
+        ports:
+          - 27017:27017
+        volumes:
+          - mongo:/data/db
     steps:
 
     - name: Set up Go 1.x
@@ -51,8 +61,8 @@ jobs:
 
     - name: Test
       run: |
-        cd backend/tests
-        go test
+        cd backend/
+        make test
   
   lint:
     name: Lint
