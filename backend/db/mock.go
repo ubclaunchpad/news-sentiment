@@ -14,3 +14,7 @@ func (md *MockDatabase) CreateNewArticle(url string, title string, source string
 func (md *MockDatabase) FindAllArticles() ([]Article, error) {
 	return nil, nil
 }
+
+func (md *MockDatabase) GetAllSources() ([]Source, error) {
+	return nil, nil
+}

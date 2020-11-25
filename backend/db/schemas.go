@@ -23,3 +23,7 @@ type Vote struct {
 	ArticleID string // url of article
 	VoteValue int32
 }
+
+type Source struct {
+	URL string `json:"url"`
+}
