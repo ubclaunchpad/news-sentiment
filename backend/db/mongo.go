@@ -59,9 +59,9 @@ func (c *Database) FindAllArticles(numArticles int) ([]Article, error) {
 	}
 	var articles []Article
 
-	numToGet := 0
+	numObtained := 0
 	for cursor.Next(context.TODO()) {
-		numToGet++
+		numObtained++
 		var article Article
 		if err := cursor.Decode(&article); err != nil {
 			return nil, errors.Wrap(err, "Unable to iterate on cursor")
@@ -69,7 +69,7 @@ func (c *Database) FindAllArticles(numArticles int) ([]Article, error) {
 		articles = append(articles, article)
 
 		//Return early if we have found the necessary number of articles
-		if numArticles != -1 && numToGet >= numArticles {
+		if numArticles != -1 && numObtained >= numArticles {
 			return articles, nil
 		}
 	}
