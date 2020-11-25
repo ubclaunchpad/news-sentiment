@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-
 	"go.mongodb.org/mongo-driver/bson"
 
 	"github.com/pkg/errors"
@@ -41,8 +40,11 @@ func (c *Database) insertArticle(article Article) (string, error) {
 // 	return User{}, nil
 // }
 
-// fetch all Article from mongo
-func (c *Database) FindAllArticles() ([]Article, error) {
+
+
+// fetch ALL Article from mongo if numArticles == -1 (FLAG)
+//else only return FIRST "numArticles" entries IN DB
+func (c *Database) FindAllArticles(numArticles int) ([]Article, error) {
 	collection := c.database.Collection("articles")
 	cursor, err := collection.Find(context.TODO(), bson.D{})
 
@@ -57,16 +59,27 @@ func (c *Database) FindAllArticles() ([]Article, error) {
 	}
 	var articles []Article
 
+	numObtained := 0
 	for cursor.Next(context.TODO()) {
+		numObtained++
 		var article Article
 		if err := cursor.Decode(&article); err != nil {
 			return nil, errors.Wrap(err, "Unable to iterate on cursor")
 		}
 		articles = append(articles, article)
+
+		//Return early if we have found the necessary number of articles
+		if numArticles != -1 && numObtained >= numArticles {
+			return articles, nil
+		}
 	}
 	return articles, nil
-
 }
+
+
+
+
+
 
 // fetch NewsPiece from mongo
 // func fetchArticle(findNews Article) (Article, error) {

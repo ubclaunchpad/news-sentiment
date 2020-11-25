@@ -63,6 +63,8 @@ func (c *Database) CreateNewArticle(url string, title string, source string) (st
 }
 
 // GetAllArticles gets all articles from db, formatted to Article type
-func (c *Database) GetAllArticles() ([]Article, error) {
-	return c.FindAllArticles()
+// numArticles: number of Articles to return from Collection,
+// NOTE:  If -1 is passed in, we return ALL Articles
+func (c *Database) GetAllArticles(numArticles int) ([]Article, error) {
+		return c.FindAllArticles(numArticles)
 }
