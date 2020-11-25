@@ -34,6 +34,7 @@ func (s *server) handleRoutes() error {
 	router.HandleFunc("/articles", s.handleGetArticles()).Methods("GET")
 	router.HandleFunc("/articles/", s.handleAddArticle()).Methods("POST")
 	router.HandleFunc("/articles/{id}", s.handleGetArticle()).Methods("GET")
+	router.HandleFunc("/sources", s.handleGetSources()).Methods("GET")
 	fmt.Printf("Running server on port %s\n", port)
 	return http.ListenAndServe(":"+port, router)
 }
@@ -138,6 +139,17 @@ func (s *server) handleAddArticle() http.HandlerFunc {
 			Result string `json:"result"`
 		}
 		s.respond(w, req, ArticleAddedResponse{Result: result}, http.StatusCreated)
+	}
+}
+
+func (s *server) handleGetSources() http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		sources, err := s.db.GetAllSources()
+		if err != nil {
+			s.respond(w, req, ErrorJson{Err: "Unable to get all sources"}, http.StatusInternalServerError)
+			return
+		}
+		s.respond(w, req, sources, http.StatusOK)
 	}
 }
 

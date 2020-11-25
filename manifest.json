@@ -22,10 +22,6 @@
     "default_popup": "frontend/popup/popup.html",
     "default_title": "The title"
   },
-  "background": {
-    "scripts": ["frontend/background.js"],
-    "persistent": false
-  },
   "options_page": "frontend/options.html",
   "permissions": [
     "tabs",

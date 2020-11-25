@@ -2,6 +2,8 @@ package db
 
 import (
 	"context"
+	"log"
+	"net/url"
 
 	"go.mongodb.org/mongo-driver/bson"
 
@@ -77,6 +79,30 @@ func (md *MongoDatabase) FindAllArticles() ([]Article, error) {
 	}
 	return articles, nil
 
+}
+
+func (md *MongoDatabase) GetAllSources() ([]Source, error) {
+	collection := md.mongo.Collection("articles")
+	cursor, err := collection.Find(context.TODO(), bson.D{})
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(context.TODO())
+	var sources []Source
+
+	for cursor.Next(context.TODO()) {
+		var article Article
+		if err := cursor.Decode(&article); err != nil {
+			return nil, err
+		}
+		u, err := url.Parse(article.URL)
+		if err != nil {
+			log.Println("Invalid URL Found in database!")
+			continue
+		}
+		sources = appendIfMissing(sources, Source{URL: u.Hostname()})
+	}
+	return sources, nil
 }
 
 // fetch NewsPiece from mongo

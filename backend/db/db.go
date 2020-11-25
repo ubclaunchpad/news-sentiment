@@ -18,6 +18,7 @@ type Database interface {
 	CreateNewUser(string, string) (string, error)
 	CreateNewArticle(string, string, string) (string, error)
 	FindAllArticles() ([]Article, error)
+	GetAllSources() ([]Source, error)
 }
 type MongoDatabase struct {
 	mongo *mongo.Database

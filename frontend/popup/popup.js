@@ -1,17 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('contentClick').addEventListener('click', contentOnClick, false);
-    document.getElementById('backgroundClick').addEventListener('click', bkgOnClick, false);
     document.getElementById('Urls').addEventListener('click', getListOnClick, false);
+
+    chrome.tabs.query({ currentWindow: true, active: true }, tabs => {
+        chrome.tabs.sendMessage(tabs[0].id, { request: 'getSources' }, null, null);
+    });
 
     function contentOnClick() {
         chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
             chrome.tabs.sendMessage(tabs[0].id, {request: 'toContent'}, null, fromContent);
-        });
-    }
-    function bkgOnClick() {
-        chrome.tabs.query({currentWindow: true, active: true}, () => {
-            chrome.runtime.sendMessage({request: 'toBkg'}, fromBkg);
         });
     }
 
@@ -34,16 +32,6 @@ document.addEventListener('DOMContentLoaded', function() {
             urlDiv.textContent = res.url;
             const br = document.createElement('br');
             document.body.appendChild(urlDiv);
-            document.body.appendChild(br);
-        }
-    }
-
-    function fromBkg(res) {
-        if (res?.currentUrl) {
-            const div = document.createElement('div');
-            div.textContent = res.currentUrl;
-            const br = document.createElement('br');
-            document.body.appendChild(div);
             document.body.appendChild(br);
         }
     }
