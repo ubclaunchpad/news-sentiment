@@ -90,22 +90,16 @@ func (s *server) handleGetArticles() http.HandlerFunc {
 		}
 
 		v := req.URL.Query()
+		//DEFAULT FLAG = -1
+		var numArticles = -1
 
-		//DEFAULT FLAG
-		var numArticles int
-
-		//No count value. RETURN ALL
-		if v.Get("count") == "" {
-			fmt.Printf("Getting ALL Articles... \n")
-			numArticles = -1
-			// fmt.Printf("%d \n", numArticles)
-		} else {
+		//No count value? RETURN ALL
+		if v.Get("count") != "" {
 			numArticles, _ = strconv.Atoi(v.Get("count"))
-			// fmt.Printf("Requesting %d articles \n", numArticles)
 		}
 
+		//IF 
 		results, err := s.db.GetAllArticles(numArticles)
-
 		if err != nil {
 			s.respond(w, req, makeErrorResponse(err), 500)
 			return
