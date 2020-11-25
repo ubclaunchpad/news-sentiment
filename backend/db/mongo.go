@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
 
@@ -75,6 +76,35 @@ func (c *Database) FindAllArticles() ([]Article, error) {
 
 // Insert a Vote
 func (c *Database) insertVote(vote Vote) (string, error) {
+	// make vote on database
+	// link vote to article, search article by url, update vote field
+	articles := c.database.Collection("articles")
+	articleFilter := bson.D{{"url", vote.ArticleURL}}
+	articleUpdate := bson.D{
+		{"$added", bson.D{
+			{"votefield", "newValue"}, // stub
+		}},
+	}
+	articleResult, err := articles.UpdateOne(context.TODO(), articleFilter, articleUpdate)
+	if err != nil {
+		return "", errors.Wrap(err, "Error inserting vote to articles in mongo database")
+	}
+
+	// link vote to user, search user by id, update vote field
+	users := c.database.Collection("users")
+	userFilter := bson.D{{"id", vote.UserID}}
+	userUpdate := bson.D{
+		{"$added", bson.D{
+			{"votefield", "newValue"}, // stub
+		}},
+	}
+	userResult, err := users.UpdateOne(context.TODO(), userFilter, userUpdate)
+	if err != nil {
+		return "", errors.Wrap(err, "Error inserting vote to user in mongo database")
+	}
+
+	fmt.Print(userResult)
+	fmt.Print(articleResult)
 	return "stub", nil // stub
 }
 

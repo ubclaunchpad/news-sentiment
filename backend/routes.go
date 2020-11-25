@@ -175,11 +175,6 @@ func (s *server) handleAddVoteOnArticle() http.HandlerFunc {
 		Result string `json:"result"`
 	}
 
-	 // 2. link to associated article
-	 s.db.AddVoteToArticle(vote.ArticleURL, vote.UserID, vote.VoteValue)
-	 // 3. link to associated user
-	 s.db.AddVoteToUser(vote.UserID, vote.ArticleURL, vote.VoteValue)
-
 	s.respond(w, req, VoteAddedResponse{Result: result}, http.StatusCreated)
  }
 }

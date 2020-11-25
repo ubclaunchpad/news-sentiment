@@ -77,13 +77,3 @@ func (c *Database) CreateNewVote(articleUrl string, userId string, voteValue int
 	}
 	return result, nil
 }
-
-func (c *Database) AddVoteToArticle(articleUrl string, userId string, voteValue int32) (string, error) {
-	// link vote to associated article
-	return "sth", nil
-} // stub
-
-func (c *Database) AddVoteToUser(userId string, articleUrl string, voteValue int32) (string, error) {
-	// link vote to associated user
-	return "sth", nil
-} // stub
