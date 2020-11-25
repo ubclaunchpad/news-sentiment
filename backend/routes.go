@@ -133,6 +133,7 @@ func (s *server) handleAddArticle() http.HandlerFunc {
 			s.respond(w, req, makeErrorResponse(err), http.StatusInternalServerError)
 			return
 		}
+
 		// TODO: what should the response return?
 		type ArticleAddedResponse struct {
 			Result string `json:"result"`
@@ -149,8 +150,9 @@ func (s *server) handleAddVoteOnArticle() http.HandlerFunc {
  return func(w http.ResponseWriter, req *http.Request) {
  	// 1. add new vote object to database
  	// create Vote type
+ 	// TODO: reduce coupling of args?
 	 type VoteJson struct {
-		 ArticleURL string // url of article
+		 ArticleURL string
 		 UserID    	string
 		 VoteValue 	int32
 	 }
@@ -174,12 +176,11 @@ func (s *server) handleAddVoteOnArticle() http.HandlerFunc {
 	}
 
 	 // 2. link to associated article
-	 s.db.AddVoteToArticle()
+	 s.db.AddVoteToArticle(vote.ArticleURL, vote.UserID, vote.VoteValue)
 	 // 3. link to associated user
-	 s.db.AddVoteToUser()
+	 s.db.AddVoteToUser(vote.UserID, vote.ArticleURL, vote.VoteValue)
 
-	// TODO: what should we return: the newly created vote or the entire array of votes on current article
-	s.respond(w, req, VoteAddedResponse{Result: result}, http.StatusCreated) // stub
+	s.respond(w, req, VoteAddedResponse{Result: result}, http.StatusCreated)
  }
 }
 

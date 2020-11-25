@@ -74,9 +74,9 @@ func (c *Database) FindAllArticles() ([]Article, error) {
 // }
 
 // Insert a Vote
-// func insertVote(vote Vote) error {
-// 	return nil
-// }
+func (c *Database) insertVote(vote Vote) (string, error) {
+	return "stub", nil // stub
+}
 
 // Get votes for article
 // func fetchVotes(article Article) ([]Vote, error) {

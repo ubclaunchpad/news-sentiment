@@ -45,12 +45,11 @@ func (c *Database) CreateNewUser(email string, name string) (string, error) {
 	if userError != nil {
 		return "", errors.Wrap(userError, "Unable to create user")
 	}
-
 	return id, nil
 }
 
 func (c *Database) CreateNewArticle(url string, title string, source string) (string, error) {
-	// need to add votes
+	// TODO: need to add votes
 	result, newsError := c.insertArticle(Article{
 		Title:  title,
 		URL:    url,
@@ -68,13 +67,23 @@ func (c *Database) GetAllArticles() ([]Article, error) {
 }
 
 func (c *Database) CreateNewVote(articleUrl string, userId string, voteValue int32) (string, error) {
+	result, newsError := c.insertVote(Vote {
+		ArticleURL: articleUrl,
+		UserID: userId,
+		VoteValue: voteValue,
+	})
+	if newsError != nil {
+		return "", errors.Wrap(newsError, "Unable add vote")
+	}
+	return result, nil
+}
+
+func (c *Database) AddVoteToArticle(articleUrl string, userId string, voteValue int32) (string, error) {
+	// link vote to associated article
 	return "sth", nil
 } // stub
 
-func (c *Database) AddVoteToArticle() () {
-
+func (c *Database) AddVoteToUser(userId string, articleUrl string, voteValue int32) (string, error) {
+	// link vote to associated user
+	return "sth", nil
 } // stub
-
-func (c *Database) AddVoteToUser() () {
-
-}
