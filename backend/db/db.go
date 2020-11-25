@@ -66,3 +66,15 @@ func (c *Database) CreateNewArticle(url string, title string, source string) (st
 func (c *Database) GetAllArticles() ([]Article, error) {
 	return c.FindAllArticles()
 }
+
+func (c *Database) CreateNewVote(articleUrl string, userId string, voteValue int32) (string, error) {
+	return "sth", nil
+} // stub
+
+func (c *Database) AddVoteToArticle() () {
+
+} // stub
+
+func (c *Database) AddVoteToUser() () {
+
+}

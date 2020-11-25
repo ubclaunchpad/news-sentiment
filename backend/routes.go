@@ -28,6 +28,7 @@ func (s *server) handleRoutes() error {
 	router.HandleFunc("/articles", s.handleGetArticles()).Methods("GET")
 	router.HandleFunc("/articles/", s.handleAddArticle()).Methods("POST")
 	router.HandleFunc("/articles/{id}", s.handleGetArticle()).Methods("GET")
+	router.HandleFunc("/articles/{id}", s.handleAddVoteOnArticle()).Methods("PUT")
 	fmt.Printf("Running server on port %s\n", port)
 	return http.ListenAndServe(":"+port, router)
 }
@@ -117,12 +118,12 @@ func (s *server) handleGetArticle() http.HandlerFunc {
 //POST: endpoint to add a single article
 func (s *server) handleAddArticle() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		type ArticleJSON struct {
+		type ArticleJson struct {
 			Source string `json:"source"`
 			Title  string `json:"title"`
 			URL    string `json:"url"`
 		}
-		var article ArticleJSON
+		var article ArticleJson
 		if err := json.NewDecoder(req.Body).Decode(&article); err != nil {
 			s.respond(w, req, makeErrorResponse(err), http.StatusBadRequest)
 			return
@@ -138,6 +139,48 @@ func (s *server) handleAddArticle() http.HandlerFunc {
 		}
 		s.respond(w, req, ArticleAddedResponse{Result: result}, http.StatusCreated)
 	}
+}
+
+func (s *server) handleAddVoteOnArticle() http.HandlerFunc {
+	// status codes:
+	// - 201 created 				- create/update resource
+	// - 400 bad request 			- bad url can't be decoded
+	// - 500 internal server error 	- db stuff fails
+ return func(w http.ResponseWriter, req *http.Request) {
+ 	// 1. add new vote object to database
+ 	// create Vote type
+	 type VoteJson struct {
+		 ArticleURL string // url of article
+		 UserID    	string
+		 VoteValue 	int32
+	 }
+
+	 // decode req body into Vote
+	 var vote VoteJson
+ 	if err := json.NewDecoder(req.Body).Decode(&vote); err != nil {
+		s.respond(w, req, makeErrorResponse(err), http.StatusBadRequest)
+		return
+	}
+
+ 	// create new vote
+	result, err := s.db.CreateNewVote(vote.ArticleURL, vote.UserID, vote.VoteValue)
+
+	if err != nil {
+		s.respond(w, req, makeErrorResponse(err), http.StatusInternalServerError)
+	}
+
+	type VoteAddedResponse struct {
+		Result string `json:"result"`
+	}
+
+	 // 2. link to associated article
+	 s.db.AddVoteToArticle()
+	 // 3. link to associated user
+	 s.db.AddVoteToUser()
+
+	// TODO: what should we return: the newly created vote or the entire array of votes on current article
+	s.respond(w, req, VoteAddedResponse{Result: result}, http.StatusCreated) // stub
+ }
 }
 
 func (s *server) respond(w http.ResponseWriter, r *http.Request, data interface{}, status int) {
