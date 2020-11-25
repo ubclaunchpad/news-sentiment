@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"fmt"
 
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -63,6 +64,8 @@ func (c *Database) CreateNewArticle(url string, title string, source string) (st
 }
 
 // GetAllArticles gets all articles from db, formatted to Article type
-func (c *Database) GetAllArticles() ([]Article, error) {
-	return c.FindAllArticles()
+func (c *Database) GetAllArticles(numArticles int) ([]Article, error) {
+
+		fmt.Println("Getting...", numArticles)
+		return c.FindAllArticles()
 }

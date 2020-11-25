@@ -57,6 +57,7 @@ func (c *Database) FindAllArticles() ([]Article, error) {
 	}
 	var articles []Article
 
+
 	for cursor.Next(context.TODO()) {
 		var article Article
 		if err := cursor.Decode(&article); err != nil {
@@ -65,8 +66,8 @@ func (c *Database) FindAllArticles() ([]Article, error) {
 		articles = append(articles, article)
 	}
 	return articles, nil
-
 }
+
 
 // fetch NewsPiece from mongo
 // func fetchArticle(findNews Article) (Article, error) {

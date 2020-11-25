@@ -28,7 +28,7 @@ func (s *server) handleRoutes() error {
 	router.HandleFunc("/users/{id}", s.handleGetUser()).Methods("GET")
 	//Adding route param...
 	router.HandleFunc("/articles/", s.handleGetArticles()).Methods("GET")
-	router.HandleFunc("/articles/{count}", s.handleGetArticles()).Methods("GET")
+	// router.HandleFunc("/articles/{count}", s.handleGetArticles()).Methods("GET")
 	router.HandleFunc("/articles/", s.handleAddArticle()).Methods("POST")
 	router.HandleFunc("/articles/{id}", s.handleGetArticle()).Methods("GET")
 	fmt.Printf("Running server on port %s\n", port)
@@ -89,7 +89,22 @@ func (s *server) handleGetArticles() http.HandlerFunc {
 			//Votes []Vote `json:"votes"`
 		}
 
-		results, err := s.db.GetAllArticles()
+		v := req.URL.Query()
+
+		//DEFAULT FLAG
+		var numArticles int
+
+		//No count value. RETURN ALL
+		if v.Get("count") == "" {
+			fmt.Printf("Getting ALL Articles... \n")
+			numArticles = -1
+			// fmt.Printf("%d \n", numArticles)
+		} else {
+			numArticles, _ = strconv.Atoi(v.Get("count"))
+			// fmt.Printf("Requesting %d articles \n", numArticles)
+		}
+
+		results, err := s.db.GetAllArticles(numArticles)
 
 		if err != nil {
 			s.respond(w, req, makeErrorResponse(err), 500)
@@ -99,18 +114,7 @@ func (s *server) handleGetArticles() http.HandlerFunc {
 		var articles = make([]ArticleJson, 0)
 		var article ArticleJson
 
-		
-		//Get number of articles necessary
-		//ASSUMPTION: count <= SIZE(RESULTS); will fix this later
-		numArticles, err := strconv.Atoi(mux.Vars(req)["count"])
-		if numArticles == 0 { //NO COUNT SPECIFIED
-			fmt.Println("Getting ALL Articles...")
-			numArticles = len(results)
-		}else{
-			fmt.Printf("Limiting number of articles to  %d \n", numArticles)
-		}
-
-		for _, a := range results[:numArticles] {
+		for _, a := range results {
 			article = ArticleJson{
 				Title: a.Title,
 				URL:   a.URL,
@@ -122,6 +126,17 @@ func (s *server) handleGetArticles() http.HandlerFunc {
 		s.respond(w, req, articles, http.StatusOK)
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
