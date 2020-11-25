@@ -58,13 +58,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (res?.listArticles) {
             const listArticles = res.listArticles;
+            if (listArticles.length === 0) {
+                return;
+            }
+            const listDiv = document.createElement('div');
+            listDiv.id = "articleList"
             listArticles.forEach(a => {
-                const anchorEl = document.createElement('a');
-                anchorEl.textContent = a.title;
-                anchorEl.href = a.url;
-                anchorEl.onclick = () => openUrlInNewTab(a.url);
-                document.body.appendChild(anchorEl);
+                const anchorDiv = document.createElement('div');
+                anchorDiv.className = "article";
+                anchorDiv.onclick = () => openUrlInNewTab(a.url);
+                const anchorSpan = document.createElement('span');
+                anchorSpan.textContent = a.title;
+                anchorDiv.appendChild(anchorSpan);
+                listDiv.appendChild(anchorDiv);
             });
+            document.body.appendChild(listDiv);
         }
     }
 
