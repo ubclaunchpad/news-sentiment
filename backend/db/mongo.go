@@ -20,7 +20,7 @@ func (c *Database) insertUser(user User) (string, error) {
 	if oid, ok := insertResult.InsertedID.(primitive.ObjectID); ok {
 		return oid.Hex(), nil
 	}
-	return "", errors.New("Invalid id created")
+	return "failed", errors.New("Invalid id created")
 }
 
 // insert NewsPiece associated with User into mongo
@@ -81,31 +81,31 @@ func (c *Database) insertVote(vote Vote) (string, error) {
 	articles := c.database.Collection("articles")
 	articleFilter := bson.D{{"url", vote.ArticleURL}}
 	articleUpdate := bson.D{
-		{"$added", bson.D{
-			{"votefield", "newValue"}, // stub
+		{"$push", bson.D{
+			{"Votes", vote}, // stub
 		}},
 	}
 	articleResult, err := articles.UpdateOne(context.TODO(), articleFilter, articleUpdate)
 	if err != nil {
-		return "", errors.Wrap(err, "Error inserting vote to articles in mongo database")
+		return "failed", errors.Wrap(err, "Error updating vote to article in mongo database")
 	}
 
 	// link vote to user, search user by id, update vote field
 	users := c.database.Collection("users")
-	userFilter := bson.D{{"id", vote.UserID}}
+	userFilter := bson.D{{"email", vote.UserEmail}}
 	userUpdate := bson.D{
-		{"$added", bson.D{
-			{"votefield", "newValue"}, // stub
+		{"$push", bson.D{
+			{"Votes", vote},
 		}},
 	}
 	userResult, err := users.UpdateOne(context.TODO(), userFilter, userUpdate)
 	if err != nil {
-		return "", errors.Wrap(err, "Error inserting vote to user in mongo database")
+		return "failed", errors.Wrap(err, "Error updating vote to user in mongo database")
 	}
 
 	fmt.Print(userResult)
 	fmt.Print(articleResult)
-	return "stub", nil // stub
+	return "succeeded", nil
 }
 
 // Get votes for article

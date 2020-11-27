@@ -28,7 +28,7 @@ func (s *server) handleRoutes() error {
 	router.HandleFunc("/articles", s.handleGetArticles()).Methods("GET")
 	router.HandleFunc("/articles/", s.handleAddArticle()).Methods("POST")
 	router.HandleFunc("/articles/{id}", s.handleGetArticle()).Methods("GET")
-	router.HandleFunc("/articles/{id}", s.handleAddVoteOnArticle()).Methods("PUT")
+	router.HandleFunc("/articles/{id}", s.handleAddVote()).Methods("PUT")
 	fmt.Printf("Running server on port %s\n", port)
 	return http.ListenAndServe(":"+port, router)
 }
@@ -80,9 +80,9 @@ func (s *server) handleAddUser() http.HandlerFunc {
 func (s *server) handleGetArticles() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		type ArticleJson struct {
-			Title string `json:"title"`
-			URL   string `json:"url"`
-			//Votes []Vote `json:"votes"`
+			Title string 		`json:"title"`
+			URL   string 		`json:"url"`
+			//Votes []Vote  	`json:"votes"`
 		}
 
 		results, err := s.db.GetAllArticles()
@@ -98,7 +98,8 @@ func (s *server) handleGetArticles() http.HandlerFunc {
 			article = ArticleJson{
 				Title: a.Title,
 				URL:   a.URL,
-				//Votes: a.Votes
+				// TODO: return vote, having issue importing the type of a.Votes
+				//Votes: a.Votes,
 			}
 			articles = append(articles, article)
 		}
@@ -142,7 +143,7 @@ func (s *server) handleAddArticle() http.HandlerFunc {
 	}
 }
 
-func (s *server) handleAddVoteOnArticle() http.HandlerFunc {
+func (s *server) handleAddVote() http.HandlerFunc {
 	// status codes:
 	// - 201 created 				- create/update resource
 	// - 400 bad request 			- bad url can't be decoded
@@ -150,10 +151,9 @@ func (s *server) handleAddVoteOnArticle() http.HandlerFunc {
  return func(w http.ResponseWriter, req *http.Request) {
  	// 1. add new vote object to database
  	// create Vote type
- 	// TODO: reduce coupling of args?
 	 type VoteJson struct {
 		 ArticleURL string
-		 UserID    	string
+		 UserEmail  string
 		 VoteValue 	int32
 	 }
 
@@ -165,7 +165,7 @@ func (s *server) handleAddVoteOnArticle() http.HandlerFunc {
 	}
 
  	// create new vote
-	result, err := s.db.CreateNewVote(vote.ArticleURL, vote.UserID, vote.VoteValue)
+	result, err := s.db.CreateNewVote(vote.ArticleURL, vote.UserEmail, vote.VoteValue)
 
 	if err != nil {
 		s.respond(w, req, makeErrorResponse(err), http.StatusInternalServerError)

@@ -19,7 +19,7 @@ type Article struct {
 
 // Vote represents a vote
 type Vote struct {
-	ArticleURL 	string // url of article
-	UserID    	string
-	VoteValue 	int32
+	ArticleURL string
+	UserEmail  string
+	VoteValue  int32
 }

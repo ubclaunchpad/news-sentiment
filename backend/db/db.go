@@ -37,7 +37,7 @@ func Init() (*Database, dbtidy, error) {
 }
 
 // CreateNewUser adds new user to mongo db
-func (c *Database) CreateNewUser(email string, name string) (string, error) {
+func (c *Database) CreateNewUser(name string, email string) (string, error) {
 	id, userError := c.insertUser(User{
 		Name:  name,
 		Email: email,
@@ -49,11 +49,12 @@ func (c *Database) CreateNewUser(email string, name string) (string, error) {
 }
 
 func (c *Database) CreateNewArticle(url string, title string, source string) (string, error) {
-	// TODO: need to add votes
 	result, newsError := c.insertArticle(Article{
 		Title:  title,
 		URL:    url,
 		Source: source,
+		// TODO: need to add votes
+		Votes:	[]Vote{},
 	})
 	if newsError != nil {
 		return "", errors.Wrap(newsError, "Unable to create article")
@@ -66,11 +67,11 @@ func (c *Database) GetAllArticles() ([]Article, error) {
 	return c.FindAllArticles()
 }
 
-func (c *Database) CreateNewVote(articleUrl string, userId string, voteValue int32) (string, error) {
+func (c *Database) CreateNewVote(articleUrl string, userEmail string, voteValue int32) (string, error) {
 	result, newsError := c.insertVote(Vote {
 		ArticleURL: articleUrl,
-		UserID: userId,
-		VoteValue: voteValue,
+		UserEmail:  userEmail,
+		VoteValue:  voteValue,
 	})
 	if newsError != nil {
 		return "", errors.Wrap(newsError, "Unable add vote")
